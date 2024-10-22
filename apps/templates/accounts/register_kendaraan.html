@@ -1,66 +1,76 @@
 {% extends "layouts/base-fullscreen.html" %}
 
-{% block title %} Sign IN {% endblock %} 
+{% block title %} Daftarkan Kendaraan {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% set nav_background = true %}
+
+{% include 'includes/navigation.html' %}
 
 {% block content %}
-
-    <main>
-
-        {% include 'includes/preloader.html' %}
-
-
-        <body>
-            <h1>Daftarkan Kendaraan</h1>
-            <form method="POST">
+<main class="container mt-5 pt-6"> <!-- note to self = M IS MARGIN PADDING IS P, T IS TOP STOP ETC FORGETTING IT -->
+    {% include 'includes/preloader.html' %}
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center mb-4">Daftarkan Kendaraan</h1>
+            <form method="POST" class="border p-4 shadow-sm rounded">
                 {{ form.hidden_tag() }}  <!-- Jika menggunakan CSRF token -->
-                <div>
-                    {{ form.jenis.label }}<br>
-                    {{ form.jenis(size=32) }}<br>
+                
+                <div class="form-group mb-3">
+                    <label for="jenis">{{ form.jenis.label }}</label>
+                    {{ form.jenis(class="form-control") }}
                     {% for error in form.jenis.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
+                        <span class="text-danger small">[{{ error }}]</span>
                     {% endfor %}
                 </div>
-                <div>
-                    {{ form.manufaktur.label }}<br>
-                    {{ form.manufaktur(size=32) }}<br>
+
+                <div class="form-group mb-3">
+                    <label for="manufaktur">{{ form.manufaktur.label }}</label>
+                    {{ form.manufaktur(class="form-control") }}
                     {% for error in form.manufaktur.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
+                        <span class="text-danger small">[{{ error }}]</span>
                     {% endfor %}
                 </div>
-                <div>
-                    {{ form.tipe.label }}<br>
-                    {{ form.tipe(size=32) }}<br>
+
+                <div class="form-group mb-3">
+                    <label for="tipe">{{ form.tipe.label }}</label>
+                    {{ form.tipe(class="form-control") }}
                     {% for error in form.tipe.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
+                        <span class="text-danger small">[{{ error }}]</span>
                     {% endfor %}
                 </div>
-                <div>
-                    {{ form.tahun.label }}<br>
-                    {{ form.tahun(size=32) }}<br>
+
+                <div class="form-group mb-3">
+                    <label for="tahun">{{ form.tahun.label }}</label>
+                    {{ form.tahun(class="form-control") }}
                     {% for error in form.tahun.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
+                        <span class="text-danger small">[{{ error }}]</span>
                     {% endfor %}
                 </div>
-                <div>
-                    {{ form.noPlat.label }}<br>
-                    {{ form.noPlat(size=32) }}<br>
+
+                <div class="form-group mb-3">
+                    <label for="noPlat">{{ form.noPlat.label }}</label>
+                    {{ form.noPlat(class="form-control") }}
                     {% for error in form.noPlat.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
+                        <span class="text-danger small">[{{ error }}]</span>
                     {% endfor %}
                 </div>
-                <div>
-                    {{ form.submit() }}
+
+                <div class="d-grid">
+                    {{ form.submit(class="btn btn-primary") }}
                 </div>
             </form>
-        </body>
-
-
-    </main>
-
+        </div>
+    </div>
+</main>
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+{% endblock javascripts %}
