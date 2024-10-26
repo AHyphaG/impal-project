@@ -1,5 +1,5 @@
 <header class="header-global">
-    <nav id="navbar-main" aria-label="Primary navigation" class="navbar navbar-main navbar-expand-lg navbar-theme-primary navbar-dark {% if request.path == url_for('pemesanan_blueprint.register_kendaraan') %}bg-dark{% else %}bg-opacity-20{% endif %}">        
+    <nav id="navbar-main" aria-label="Primary navigation" class="navbar navbar-main navbar-expand-lg navbar-theme-primary navbar-dark {% if request.path == url_for('home_blueprint.index') %}bg-transparent{% else %}bg-solid{% endif %}">
         <div class="container">
             <!-- Logo -->
             <a class="navbar-brand me-md-3" href="{{ url_for('home_blueprint.index') }}">
