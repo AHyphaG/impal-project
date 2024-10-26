@@ -1,139 +1,126 @@
-{% extends "layouts/base.html" %}
+<title>Pesan Produk</title>
+
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Pemesanan Produk {% endblock %}
+
+{% block stylesheets %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% include 'includes/navigation.html' %}
 
 {% block content %}
-{% include 'includes/preloader.html' %}
-    <main>
+
+<main class="container mt-5 pt-6 mb-5">
     
+    {% include 'includes/preloader.html' %}
 
-    <!-- Hero -->
-    <div class="section-header pb-6 bg-primary text-white">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8 text-center">
-                    <h1 class="display-3 mb-4">Pemesanan Produk suku cadang bergerak cepat  </h1>
-                    <p class="lead mb-5">Pesan produk sesuai yang anda butuhkan</p>
-                    <div class="container">
-    <style>
-        /* Styling utama */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #3a3a57;
-            margin: 0;
-            padding: 0;
-            color: #000; /* Ubah warna teks menjadi hitam */
-        }
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="container">
+                <h1 class="text-center mb-4">Pesan produk</h1>
+                <section class="product-gallery">
+                    <div class="card">
+                        <img src="static/assets/img/team/21-1.png" alt="Produk 1">
+                        <h2>Produk 1</h2>
+                        <p>Oli</p>
+                        <a href="#" class="button">Beli Sekarang</a>
+                    </div>
 
-        .section-header {
-            color: #000; /* Ubah warna teks header menjadi hitam */
-        }
+                    <div class="card">
+                        <img src="static/assets/img/team/aki.jpg" alt="Produk 2">
+                        <h2>Produk 2</h2>
+                        <p>Aki</p>
+                        <a href="#" class="button">Beli Sekarang</a>
+                    </div>
 
-        .container {
-            max-width: 800px; /* Menentukan lebar maksimal */
-            margin: 20px auto; /* Menempatkan kontainer di tengah */
-            padding: 20px;
-            background-color: #242e4c !important;
-        }
+                    <div class="card">
+                        <img src="static/assets/img/team/busi.jpg" alt="Produk 3">
+                        <h2>Produk 3</h2>
+                        <p>Busi</p>
+                        <a href="#" class="button">Beli Sekarang</a>
+                    </div>
 
-        .card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
-            padding: 20px;
-            color: #000; /* Ubah warna teks dalam kartu menjadi hitam */
-            text-align: center; /* Pusatkan isi dalam kartu */
-        }
+                    <div class="card">
+                        <img src="static/assets/img/team/vbelt.jpeg" alt="Produk 4">
+                        <h2>Produk 4</h2>
+                        <p>Belts</p>
+                        <a href="#" class="button">Beli Sekarang</a>
+                    </div>
 
-        .card img {
-            max-width: 30%; /* Mengatur ukuran gambar menjadi 70% dari lebar kartu */
-            height: auto;
-            border-radius: 8px;
-            margin: 10px auto; /* Margin auto untuk center */
-            display: block;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #333;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .button:hover {
-            background-color: #555;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            color: #000; /* Ubah warna teks input menjadi hitam */
-        }
-
-        input[type="submit"] {
-            background-color: #333;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #555;
-        }
-    </style>
-
-<body>
-
-   
-    <!-- Kartu Gambar Produk -->
-    <section class="product-gallery">
-        <div class="card">
-            <img src="static\assets\img\team\21-1.png" alt="Produk 1">
-            <h2>Produk 1</h2>
-            <p>Oli</p>
-            <a href="#" class="button">Beli Sekarang</a>
-        </div>
-
-        <div class="card">
-            <img src="static\assets\img\team\aki.jpg" alt="Produk 2">
-            <h2>Produk 2</h2>
-            <p>Aki</p>
-            <a href="#" class="button">Beli Sekarang</a>
-        </div>
-
-        <div class="card">
-            <img src="static\assets\img\team\busi.jpg" alt="Produk 3">
-            <h2>Produk 3</h2>
-            <p>Busi.</p>
-            <a href="#" class="button">Beli Sekarang</a>
-        </div>
-
-        <div class="card">
-            <img src="static\assets\img\team\vbelt.jpeg" alt="Produk 4">
-            <h2>Produk 4</h2>
-            <p>Belts</p>
-            <a href="#" class="button">Beli Sekarang</a>
-        </div>
-
-        <div class="card">
-            <img src="static\assets\img\team\kopling.png" alt="Produk 5">
-            <h2>Produk 5</h2>
-            <p>Kampas kopling</p>
-            <a href="#" class="button">Beli Sekarang</a>
-        </div>
-
-    </section>
-
-    </div>
-                </div>
+                    <div class="card">
+                        <img src="static/assets/img/team/kopling.png" alt="Produk 5">
+                        <h2>Produk 5</h2>
+                        <p>Kampas Kopling</p>
+                        <a href="#" class="button">Beli Sekarang</a>
+                    </div>
+                </section>
             </div>
-        </div>
-    </div>
+        </div>    
+    </div>    
+</main>
 
-    </main>
-    {% include 'includes/footer.html' %}
+{% include 'includes/footer.html' %}
+
+<style>
+    /* Styling utama */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #000; /* Ubah warna teks menjadi hitam */
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        margin: 20px 0;
+        padding: 20px;
+        color: #000; /* Ubah warna teks dalam kartu menjadi hitam */
+        text-align: center; /* Pusatkan isi dalam kartu */
+    }
+
+    .card img {
+        max-width: 35%; /* Mengatur ukuran gambar menjadi 70% dari lebar kartu */
+        height: auto;
+        border-radius: 8px;
+        margin: 10px auto; /* Margin auto untuk center */
+        display: block;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .button:hover {
+        background-color: #555;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        color: #000; /* Ubah warna teks input menjadi hitam */
+    }
+
+    input[type="submit"] {
+        background-color: #333;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #555;
+    }
+</style>
 
 {% endblock content %}
