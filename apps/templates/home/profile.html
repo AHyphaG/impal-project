@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Profil</title>
+        
+        {% extends "layouts/base-fullscreen.html" %}
+        
+        {% block title %} Profil {% endblock %}
+        
+        {% block stylesheets %}
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+        {% endblock stylesheets %}
+        
+        {% include 'includes/navigation.html' %}
+    </head>
+    
+    <body>
+        {% block content %}
+        <main class="container mt-5 pt-6 mb-5">
+        
+            {% include 'includes/preloader.html' %}
+        
+            <div class="container">
+                <div class="container-content">
+                    <h2>Profil</h2>
+                    <form method="POST" class="border p-4 shadow-sm rounded">
+                        <div class="pp">
+                            <div class="img-profile">
+                                <img src="static\assets\img\zeusProfile.jpg" class="profileImg" alt="Profile Picture">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="usernames-group">
+                                <div class="f-name">
+                                    <label for="first-name">Nama depan</label>
+                                    <input type="text" class="form-control" name="first-name" id="first-name" aria-describedby="helpId" required placeholder="Nama depan">
+                                </div>
+                                <div class="l-name">
+                                    <label for="last-name">Nama belakang</label>
+                                    <input type="text" class="form-control" name="last-name" id="last-name" aria-describedby="helpId" required placeholder="Nama belakang">
+                                </div>
+                                
+                            </div>
+        
+                            <label for="address">Alamat</label>
+                            <input type="text" class="form-control" name="address" id="address" aria-describedby="helpId" required placeholder="Alamat">
+                            
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" name="email" id="email" aria-describedby="helpId" required placeholder="Email">
+                            
+                            <label for="phone">Nomor Telepon</label>
+                            <input type="tel" class="form-control" name="phone" id="phone" aria-describedby="helpId" required placeholder="Nomor telepon">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <style>
+            .form-group {
+                padding-top: 20px;
+            }
+            .button-save-changes{
+                display: flex;
+                justify-content: center;
+                padding: 20px;
+            }
+            .l-name {
+                display: flex;
+                flex-direction: column;
+            }
+            .f-name {
+                display: flex;
+                flex-direction: column;
+            }
+            .usernames-group {
+                align-items: center;
+                display: flex;
+                flex-direction: row;
+            }
+            .a-content{
+                justify-content: center;
+                align-items: center;
+                flex-direction: column; 
+                display: flex;
+                padding-left:50px;
+                padding-right: 50px;
+                border-radius: 10px;
+                text-decoration: none;
+                color: black;
+                background-color: white;
+                outline: 1px solid black;
+            }
+            
+            .container-content{
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+                height: 95vh;
+            }
+            
+            .profileImg {
+                width: 75px; 
+                height: 75px; 
+                border-radius: 50%; 
+                object-fit: cover; 
+                border: 2px solid black; 
+            }
+            
+            .pp{
+                flex-direction: column;
+                display :flex;
+                align-items: center;
+            }
+            
+            .button-profile {
+                display: flex; 
+                flex-direction: row; 
+                margin-left: 10px; 
+                padding-top: 20px;
+            }
+            
+            .btn {
+                margin-left: 5px;
+                margin-right: 5px;
+                border-radius: 10px;
+            }
+            
+            .body{
+                background-color: #1c2540;
+            }
+        
+        </style>
+        
+        {% include 'includes/footer.html' %}
+        {% endblock content %}
+        
+        {% block javascripts %}
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+        {% endblock javascripts %}
+    </body>
+    
+</html>
