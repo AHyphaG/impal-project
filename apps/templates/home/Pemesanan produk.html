@@ -6,121 +6,134 @@
 
 {% block stylesheets %}
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock stylesheets %}
 
 {% include 'includes/navigation.html' %}
 
 {% block content %}
 
-<main class="container mt-5 pt-6 mb-5">
-    
+<body>
+
     {% include 'includes/preloader.html' %}
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="container">
-                <h1 class="text-center mb-4">Pesan produk</h1>
-                <section class="product-gallery">
-                    <div class="card">
-                        <img src="static/assets/img/team/21-1.png" alt="Produk 1">
-                        <h2>Produk 1</h2>
-                        <p>Oli</p>
-                        <a href="#" class="button">Beli Sekarang</a>
+    <div class="section section-md">
+        <div class="container mt-5">
+            <!-- Search Bar -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products..." aria-label="Search">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
-
-                    <div class="card">
-                        <img src="static/assets/img/team/aki.jpg" alt="Produk 2">
-                        <h2>Produk 2</h2>
-                        <p>Aki</p>
-                        <a href="#" class="button">Beli Sekarang</a>
-                    </div>
-
-                    <div class="card">
-                        <img src="static/assets/img/team/busi.jpg" alt="Produk 3">
-                        <h2>Produk 3</h2>
-                        <p>Busi</p>
-                        <a href="#" class="button">Beli Sekarang</a>
-                    </div>
-
-                    <div class="card">
-                        <img src="static/assets/img/team/vbelt.jpeg" alt="Produk 4">
-                        <h2>Produk 4</h2>
-                        <p>Belts</p>
-                        <a href="#" class="button">Beli Sekarang</a>
-                    </div>
-
-                    <div class="card">
-                        <img src="static/assets/img/team/kopling.png" alt="Produk 5">
-                        <h2>Produk 5</h2>
-                        <p>Kampas Kopling</p>
-                        <a href="#" class="button">Beli Sekarang</a>
-                    </div>
-                </section>
+                </div>
             </div>
-        </div>    
-    </div>    
-</main>
+            <!-- First Row of Cards -->
+            <div class="row mb-4">
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/aki.jpg" class="card-img-top rounded-top" alt="Product1">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Recommended</span>
+                            <h3 class="h5 card-title mt-3">Product1</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/vbelt.jpeg" class="card-img-top rounded-top" alt="Product2">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Top rated</span>
+                            <h3 class="h5 card-title mt-3">Product2</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/busi.jpg" class="card-img-top rounded-top" alt="Product3">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Awards</span>
+                            <h3 class="h5 card-title mt-3">Product3</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row of Cards -->
+            <div class="row">
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/busi.jpg" class="card-img-top rounded-top" alt="Product4">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>New Arrival</span>
+                            <h3 class="h5 card-title mt-3">Product4</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/busi.jpg" class="card-img-top rounded-top" alt="Product5">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Popular</span>
+                            <h3 class="h5 card-title mt-3">Product5</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/busi.jpg" class="card-img-top rounded-top" alt="Product6">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Best Seller</span>
+                            <h3 class="h5 card-title mt-3">Product6</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
 
 {% include 'includes/footer.html' %}
 
-<style>
-    /* Styling utama */
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        color: #000; /* Ubah warna teks menjadi hitam */
-    }
-
-    .card {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-        margin: 20px 0;
-        padding: 20px;
-        color: #000; /* Ubah warna teks dalam kartu menjadi hitam */
-        text-align: center; /* Pusatkan isi dalam kartu */
-    }
-
-    .card img {
-        max-width: 35%; /* Mengatur ukuran gambar menjadi 70% dari lebar kartu */
-        height: auto;
-        border-radius: 8px;
-        margin: 10px auto; /* Margin auto untuk center */
-        display: block;
-    }
-
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #333;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-
-    .button:hover {
-        background-color: #555;
-    }
-
-    input, select {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        color: #000; /* Ubah warna teks input menjadi hitam */
-    }
-
-    input[type="submit"] {
-        background-color: #333;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-        background-color: #555;
-    }
-</style>
 
 {% endblock content %}
