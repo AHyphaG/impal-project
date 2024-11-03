@@ -3,7 +3,8 @@ from flask_login import login_required, current_user
 
 from apps import db
 from apps.pemesanan import blueprint
-from apps.pemesanan.models import Vehicles, Users, Orders, Montir
+from apps.authentication.Vehicles import Vehicles
+from apps.pemesanan.models import Orders, Montir
 from apps.pemesanan.forms import RegisterKendaraanForm 
 
 

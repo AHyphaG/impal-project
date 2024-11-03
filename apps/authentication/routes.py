@@ -7,13 +7,15 @@ from flask import render_template, redirect, request, url_for
 from flask_login import (
     current_user,
     login_user,
-    logout_user
+    logout_user,
+    login_required
 )
 
 from apps import db, login_manager
 from apps.authentication import blueprint
-from apps.authentication.forms import LoginForm, CreateAccountForm
+from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation
 from apps.authentication.models import Users
+from .Vehicles import Vehicles
 
 from apps.authentication.util import verify_pass
 
@@ -50,13 +52,11 @@ def login():
         # Something (user or pass) is not ok
         return render_template('accounts/login.html',
                                msg='Wrong user or password',
-                               form=login_form,
-                               user_logged_in=current_user.is_authenticated)  # Tambahkan ini
+                               form=login_form)#edited
 
     if not current_user.is_authenticated:
         return render_template('accounts/login.html',
-                               form=login_form,
-                               user_logged_in=current_user.is_authenticated)  # Tambahkan ini
+                               form=login_form)#edited
     return redirect(url_for('home_blueprint.index'))
 
 
@@ -64,12 +64,12 @@ def login():
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     create_account_form = CreateAccountForm(request.form)
+    
     if 'register' in request.form:
-
         username = request.form['username']
         email = request.form['email']
 
-        # Check usename exists
+        # Check if the username exists
         user = Users.query.filter_by(username=username).first()
         if user:
             return render_template('accounts/register.html',
@@ -77,7 +77,7 @@ def register():
                                    success=False,
                                    form=create_account_form)
 
-        # Check email exists
+        # Check if the email exists
         user = Users.query.filter_by(email=email).first()
         if user:
             return render_template('accounts/register.html',
@@ -85,19 +85,44 @@ def register():
                                    success=False,
                                    form=create_account_form)
 
-        # else we can create the user
+        # Create the user
         user = Users(**request.form)
         db.session.add(user)
         db.session.commit()
+        login_user(user)
+        return redirect(url_for('authentication_blueprint.register_information'))
 
-        return render_template('accounts/register.html',
-                               msg='User created please <a href="/login">login</a>',
-                               success=True,
-                               form=create_account_form)
+    return render_template('accounts/register.html', form=create_account_form)
 
-    else:
-        return render_template('accounts/register.html', form=create_account_form)
+@blueprint.route('/register_information', methods=['GET', 'POST'])
+@login_required  # Ensure the user is logged in
+def register_information():
+    form = CreateInformation(request.form)
+    user = current_user  # Fetch the current user
 
+    print('Current User:', user)
+
+    if form.validate_on_submit():
+        # Update the user's information
+        user.namaDepan = form.namaDepan.data
+        user.namaBelakang = form.namaBelakang.data
+        user.sex = form.sex.data
+        
+        db.session.commit()
+        print('User information updated successfully.')
+        return redirect(url_for('home_blueprint.index'))
+
+    # Debug output for any form validation errors
+    print('Form validation errors:', form.errors)
+    
+    return render_template('accounts/create-profile.html', form=form)
+
+@blueprint.route('/vehicles')
+@login_required
+def vehicles():
+    user_vehicles = Vehicles.query.filter_by(userID_fk=current_user.userID).all()
+    
+    return render_template('accounts/list_vehicles.html', vehicles=user_vehicles,user=current_user)
 
 @blueprint.route('/logout')
 def logout():
