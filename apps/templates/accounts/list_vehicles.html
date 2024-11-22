@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Kendaraan Saya</title>
+</head>
+<body>
+    <h2>Daftar Kendaraan {{ user.namaBelakang }}</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Jenis</th>
+                <th>Manufaktur</th>
+                <th>Tipe</th>
+                <th>Tahun Keluaran</th>
+                <th>Nomor Plat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vehicle in vehicles %}
+            <tr>
+                <td>{{ vehicle.jenis }}</td>
+                <td>{{ vehicle.manufaktur }}</td>
+                <td>{{ vehicle.tipe }}</td>
+                <td>{{ vehicle.tahunKeluaran }}</td>
+                <td>{{ vehicle.noPlat }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">Tidak ada kendaraan yang terdaftar.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
