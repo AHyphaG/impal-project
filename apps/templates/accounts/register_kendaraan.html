@@ -9,26 +9,33 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for dropdown arrow -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 {% endblock stylesheets %}
 
 {% set nav_background = true %}
 
 {% include 'includes/navigation.html' %}
 
-
 {% block content %}
 <main class="container mt-5 pt-6 mb-5"> <!-- note to self = M IS MARGIN PADDING IS P, T IS TOP STOP ETC FORGETTING IT -->
     {% include 'includes/preloader.html' %}
-    
+
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h1 class="text-center mb-4">Daftarkan Kendaraan</h1>
             <form method="POST" class="border p-4 shadow-sm rounded">
-                {{ form.hidden_tag() }}  <!-- Jika menggunakan CSRF token -->
-                
+                {{ form.hidden_tag() }}  <!-- CSRF token -->
+
                 <div class="form-group mb-3">
                     <label for="jenis">{{ form.jenis.label }}</label>
-                    {{ form.jenis(class="form-control") }}
+                    <div class="input-group">
+                        <select class="form-control" name="jenis" required>
+                            <option value="Motor">Motor</option>
+                            <option value="Mobil">Mobil</option>
+                        </select>
+                        <span class="input-group-text"><i class="fas fa-chevron-down"></i></span>
+                    </div>
                     {% for error in form.jenis.errors %}
                         <span class="text-danger small">[{{ error }}]</span>
                     {% endfor %}
@@ -36,7 +43,16 @@
 
                 <div class="form-group mb-3">
                     <label for="manufaktur">{{ form.manufaktur.label }}</label>
-                    {{ form.manufaktur(class="form-control") }}
+                    <div class="input-group">
+                        <select class="form-control" name="manufaktur" required>
+                            <option value="Honda">Honda</option>
+                            <option value="Yamaha">Yamaha</option>
+                            <option value="Suzuki">Suzuki</option>
+                            <option value="Kawasaki">Kawasaki</option>
+                            <option value="Ducati">Ducati</option>
+                        </select>
+                        <span class="input-group-text"><i class="fas fa-chevron-down"></i></span>
+                    </div>
                     {% for error in form.manufaktur.errors %}
                         <span class="text-danger small">[{{ error }}]</span>
                     {% endfor %}
@@ -44,7 +60,16 @@
 
                 <div class="form-group mb-3">
                     <label for="tipe">{{ form.tipe.label }}</label>
-                    {{ form.tipe(class="form-control") }}
+                    <div class="input-group">
+                        <select class="form-control" name="tipe" required>
+                            <option value="Beat">Beat</option>
+                            <option value="Aerox">Aerox</option>
+                            <option value="Satria FU">Satria FU</option>
+                            <option value="Ninja">Ninja</option>
+                            <option value="Monster">Monster</option>
+                        </select>
+                        <span class="input-group-text"><i class="fas fa-chevron-down"></i></span>
+                    </div>
                     {% for error in form.tipe.errors %}
                         <span class="text-danger small">[{{ error }}]</span>
                     {% endfor %}
