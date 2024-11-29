@@ -11,10 +11,12 @@ from flask_login import (
     login_required
 )
 
+import requests
+
 from apps import db, login_manager
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation, LoginFormBengkel, CreateBengkelForm, CreateBengkelInformation
-from apps.authentication.models import Users
+from apps.authentication.models import Users, Alamat
 from apps.bengkel.models import Bengkel
 from .Vehicles import Vehicles
 
@@ -95,28 +97,75 @@ def register():
 
     return render_template('accounts/register.html', form=create_account_form)
 
+# @blueprint.route('/register_information', methods=['GET', 'POST'])
+# @login_required
+# def register_information():
+#     form = CreateInformation(request.form)
+#     user = current_user  # Fetch the current user
+
+#     print('Current User:', user)
+
+#     if form.validate_on_submit():
+#         # Update the user's information
+#         user.namaDepan = form.namaDepan.data
+#         user.namaBelakang = form.namaBelakang.data
+#         user.sex = form.sex.data
+        
+#         db.session.commit()
+#         print('User information updated successfully.')
+#         return redirect(url_for('home_blueprint.index'))
+
+#     # Debug output for any form validation errors
+#     print('Form validation errors:', form.errors)
+    
+#     return render_template('accounts/create-profile.html', form=form)
 @blueprint.route('/register_information', methods=['GET', 'POST'])
-@login_required  # Ensure the user is logged in
+@login_required
 def register_information():
     form = CreateInformation(request.form)
-    user = current_user  # Fetch the current user
+    user = current_user
+    provinsi_choices = [(prov['id'], prov['nama']) for prov in requests.get("https://ibnux.github.io/data-indonesia/provinsi.json").json()]
+    form.provinsi.choices = provinsi_choices
 
-    print('Current User:', user)
+    if form.provinsi.data:
+        kabupaten_data = requests.get(f"https://ibnux.github.io/data-indonesia/kabupaten/{form.provinsi.data}.json").json()
+        form.kabkot.choices = [(kab['id'], kab['nama']) for kab in kabupaten_data]
+
+    if form.kabkot.data:
+        kecamatan_data = requests.get(f"https://ibnux.github.io/data-indonesia/kecamatan/{form.kabkot.data}.json").json()
+        form.kecamatan.choices = [(kec['id'], kec['nama']) for kec in kecamatan_data]
+
+    if form.kecamatan.data:
+        kelurahan_data = requests.get(f"https://ibnux.github.io/data-indonesia/kelurahan/{form.kecamatan.data}.json").json()
+        form.kelurahan.choices = [(kel['id'], kel['nama']) for kel in kelurahan_data]
 
     if form.validate_on_submit():
-        # Update the user's information
         user.namaDepan = form.namaDepan.data
         user.namaBelakang = form.namaBelakang.data
         user.sex = form.sex.data
+        provinsi_name = dict(provinsi_choices).get(form.provinsi.data, "Provinsi tidak diketahui")
         
-        db.session.commit()
-        print('User information updated successfully.')
-        return redirect(url_for('home_blueprint.index'))
+        kabkot_name = dict([(kab['id'], kab['nama']) for kab in kabupaten_data]).get(form.kabkot.data, "Kab/Kota tidak diketahui")
 
-    # Debug output for any form validation errors
-    print('Form validation errors:', form.errors)
-    
-    return render_template('accounts/create-profile.html', form=form)
+        kecamatan_name = dict([(kec['id'], kec['nama']) for kec in kecamatan_data]).get(form.kecamatan.data, "Kecamatan tidak diketahui")
+
+        kelurahan_name = dict([(kel['id'], kel['nama']) for kel in kelurahan_data]).get(form.kelurahan.data, "Kelurahan tidak diketahui")
+
+        alamat = Alamat(
+            provinsi=provinsi_name,
+            kabkot=kabkot_name,
+            kecamatan=kecamatan_name,
+            kelurahan=kelurahan_name,
+            alamat_lengkap=form.alamatLengkap.data,
+            nama_alamat=form.namaAlamat.data,
+            user_id = user.userID,
+        )
+        db.session.add(alamat)
+        db.session.commit()
+        print('Data alamat berhasil disimpan ke database.\n')
+        print(f"Provinsi: {provinsi_name}, Kab/Kota: {kabkot_name}, Kecamatan: {kecamatan_name}, Kelurahan: {kelurahan_name}")
+        return redirect(url_for('home_blueprint.index'))
+    return render_template('accounts/create-profile.html',form=form)
 
 @blueprint.route('/vehicles')
 @login_required
