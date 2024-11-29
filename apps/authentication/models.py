@@ -4,19 +4,36 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from flask_login import UserMixin
-
+from sqlalchemy.orm import synonym
 from apps import db, login_manager
 
 from apps.authentication.util import hash_pass
 
 class Users(db.Model, UserMixin):
 
-    __tablename__ = 'Users'
+    __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True)
-    email = db.Column(db.String(64), unique=True)
-    password = db.Column(db.LargeBinary)
+    #Kolom
+    # id = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, primary_key=True)
+    id = synonym('userID')
+    username = db.Column(db.String(64), unique=True, nullable=False)
+    email = db.Column(db.String(64), unique=True, nullable=False)
+    password = db.Column(db.LargeBinary, nullable=False)
+    namaDepan = db.Column(db.String(64), nullable=False)
+    namaBelakang = db.Column(db.String(64), nullable=False)
+    sex = db.Column(db.String(6))
+    nomorHp = db.Column(db.String(64), nullable=False)
+
+    #Hubungan
+    alamat_active = db.Column(db.Integer, db.ForeignKey('alamat.alamatID'), nullable=True)
+
+    # Relasi ke alamat
+    addresses = db.relationship('Alamat', backref='owner', foreign_keys='Alamat.userID')
+
+    # Relasi ke kendaraan
+    vehicles = db.relationship('Vehicles', backref='owner', lazy=True)
+
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

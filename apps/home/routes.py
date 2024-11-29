@@ -3,10 +3,13 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from apps import db,login_manager
 from apps.home import blueprint
-from flask import render_template, request
-from flask_login import login_required
+from flask import render_template, redirect, request, url_for
+from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
+
+from apps.home.forms import ProfileForm
 
 
 @blueprint.route('/index')
@@ -52,3 +55,45 @@ def get_segment(request):
 
     except:
         return None
+    
+@blueprint.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    user = current_user
+    form = ProfileForm()
+
+    if form.validate_on_submit():
+        user.namaDepan = form.namaDepan.data
+        user.namaBelakang = form.namaBelakang.data
+        user.sex = form.sex.data
+        user.email = form.email.data
+        user.nomorHp = form.phone.data
+        
+        db.session.commit()
+        return redirect(url_for('home_blueprint.index'))
+
+    form.namaDepan.data = user.namaDepan
+    form.namaBelakang.data = user.namaBelakang
+    form.email.data = user.email
+    form.phone.data = user.nomorHp
+
+    return render_template('accounts/profile.html', form=form, user=user)
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return render_template('home/page-403.html'), 403
+
+
+@blueprint.errorhandler(403)
+def access_forbidden(error):
+    return render_template('home/page-403.html'), 403
+
+
+@blueprint.errorhandler(404)
+def not_found_error(error):
+    return render_template('home/page-404.html'), 404
+
+
+@blueprint.errorhandler(500)
+def internal_error(error):
+    return render_template('home/page-500.html'), 500

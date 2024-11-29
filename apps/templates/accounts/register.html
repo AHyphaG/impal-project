@@ -19,7 +19,7 @@
                         <div class="signin-inner my-4 my-lg-0 bg-white shadow-soft border rounded border-gray-300 p-4 p-lg-5 w-100 fmxw-500">
                             <div class="text-center text-md-center mb-4 mt-md-0">
                                 <h1 class="mb-0 h3">
-                                    <a href="https://appseed.us/product/pixel-bootstrap/flask/" target="_blank">Flask Pixel UI</a> - Register
+                                    <div>Montir Keliling - Daftar</div>
                                 </h1>
                                 <br />
                                 <span class="font-weight-normal">
@@ -38,7 +38,7 @@
                                     {{ form.hidden_tag() }}
 
                                     <div class="form-group mb-4">
-                                        <label for="email">Username</label>
+                                        <label for="username">Username</label>
                                         <div class="input-group">
                                             <span class="input-group-text" id="basic-addon1"><span class="fas fa-user"></span></span>
                                             {{ form.username(class="form-control") }}
@@ -50,6 +50,13 @@
                                         <div class="input-group">
                                             <span class="input-group-text" id="basic-addon3"><span class="fas fa-envelope"></span></span>
                                             {{ form.email(class="form-control", type="email") }}
+                                        </div>  
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="nomorHandphone">Nomor HP</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="basic-addon3"><span class="fas fa-envelope"></span></span>
+                                            {{ form.nomorHp(class="form-control") }}
                                         </div>  
                                     </div>
                                     <!-- End of Form -->

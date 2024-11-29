@@ -1,6 +1,6 @@
 {% extends "layouts/base-fullscreen.html" %}
 
-{% block title %} Sign IN {% endblock %} 
+{% block title %} Admin Login {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -19,7 +19,7 @@
                         <div class="signin-inner my-4 my-lg-0 bg-white shadow-soft border rounded border-gray-300 p-4 p-lg-5 w-100 fmxw-500">
                             <div class="text-center text-md-center mb-4 mt-md-0">
                                 <h1 class="mb-0 h3">
-                                    <div>Montir Keliling - Login</div>
+                                    <div>Bengkel Dashboard - Login</div>
                                 </h1>
                                 <br/>
                                 <span class="font-weight-normal">
@@ -28,20 +28,20 @@
                                             {{ msg | safe }}
                                         </span>                                        
                                     {% else %}
-                                        Add your credentials
+                                        Add your credentials to access the Admin Dashboard
                                     {% endif %}                                  
                                 </span>
                             </div>
-                            <form method="post" action="" class="mt-4">
+                            <form method="post" action="{{ url_for('authentication_blueprint.loginBengkel') }}" class="mt-4">
 
                                 {{ form.hidden_tag() }}
 
                                 <!-- Form -->
                                 <div class="form-group mb-4">
-                                    <label for="email">Username</label>
+                                    <label for="email">Email</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1"><span class="fas fa-user"></span></span>
-                                        {{ form.username(class="form-control") }}
+                                        {{ form.email(class="form-control") }}
                                     </div>  
                                 </div>
                                 <!-- End of Form -->
@@ -62,11 +62,11 @@
                                               Remember me
                                             </label>
                                         </div>
-                                        <div><a href="{{ url_for('authentication_blueprint.register') }}" class="text-right">Register</a></div>
+                                        <div><a href="{{url_for('authentication_blueprint.register_bengkel')}}" class="text-right">Daftarkan Bengkel</a></div>
                                     </div>
                                 </div>
                                 <div class="d-grid">
-                                    <button type="submit" name="login" class="btn btn-primary">Sign in</button>
+                                    <button type="submit" name="login-bengkel" class="btn btn-primary">Sign in</button>
                                 </div>
                             </form>
 

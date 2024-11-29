@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <!-- Include jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- Include Select2 CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+        <!-- Include Select2 JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+        <title>Edit Profile</title>
+        {% extends "layouts/base-fullscreen.html" %}
+        
+        {% block title %} Edit Profil {% endblock %}
+        
+        {% block stylesheets %}
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+        {% endblock stylesheets %}
+        
+        {% include 'includes/navigation.html' %}
+    
+    </head>
+    
+    
+    <body>
+    
+        {% block content %}
+        <main class="container mt-5 pt-6 mb-5">
+        
+            {% include 'includes/preloader.html' %}
+        
+            <div class="container">
+                <div class="container-content">
+                    <h2>Profil</h2>
+                    <form method="POST" class="border p-4 shadow-sm rounded">
+                        {{ form.hidden_tag() }}
+                        <div class="pp">
+                            <div class="img-profile">
+                                <img src="static/assets/img/zeusProfile.jpg" class="profileImg" alt="Profile Picture">
+                            </div>
+                            <div class="button-profile">
+                                <button type="button" class="btn btn-primary">Ganti Foto</button>
+                                <button type="button" class="btn btn-delete-pic" style="background-color: #dc3545; color: white;">Hapus Foto</button>
+                            </div>
+                        </div>
+                    
+                        <!-- Dropdowns for Indonesian Locations -->
+                        <div class="form-group">
+                            <label for="select2-provinsi">Provinsi</label>
+                            <select id="select2-provinsi" class="form-control" required>
+                                <option value="">- Pilih Provinsi -</option>
+                            </select>
+                    
+                            <label for="select2-kabupaten">Kabupaten</label>
+                            <select id="select2-kabupaten" class="form-control" required disabled>
+                                <option value="">- Pilih Kabupaten -</option>
+                            </select>
+                    
+                            <label for="select2-kecamatan">Kecamatan</label>
+                            <select id="select2-kecamatan" class="form-control" required disabled>
+                                <option value="">- Pilih Kecamatan -</option>
+                            </select>
+                    
+                            <label for="select2-kelurahan">Kelurahan</label>
+                            <select id="select2-kelurahan" class="form-control" required disabled>
+                                <option value="">- Pilih Kelurahan -</option>
+                            </select>
+                        </div>
+                    
+                        <div class="form-group">
+                            <div class="usernames-group">
+                                <div class="f-name">
+                                    <label for="first-name">Nama depan</label>
+                                    {{ form.namaDepan(class="form-control") }}
+                                </div>
+                                <div class="l-name">
+                                    <label for="last-name">Nama belakang</label>
+                                    {{ form.namaBelakang(class="form-control") }}
+                                </div>
+                            </div>
+                            
+                            <label for="sex">Jenis Kelamin</label>
+                            {{ form.sex(class="form-control") }}
+
+                            
+                            <!-- <label for="address">Alamat</label>
+                            <input type="text" class="form-control" name="address" id="address" aria-describedby="helpId" required placeholder="Alamat">
+                    
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" name="email" id="email" aria-describedby="helpId" required placeholder="Email">
+                    
+                            <label for="phone">Nomor Telepon</label>
+                            <input type="tel" class="form-control" name="phone" id="phone" aria-describedby="helpId" required placeholder="Nomor telepon"> -->
+                        </div>
+                        <div class="button-save-changes">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </main>
+
+        <script>
+            var urlProvinsi = "https://ibnux.github.io/data-indonesia/provinsi.json";
+            var urlKabupaten = "https://ibnux.github.io/data-indonesia/kabupaten/";
+            var urlKecamatan = "https://ibnux.github.io/data-indonesia/kecamatan/";
+            var urlKelurahan = "https://ibnux.github.io/data-indonesia/kelurahan/";
+
+            function clearOptions(id) {
+                $('#' + id).empty().trigger('change');
+            }
+
+            console.log('Load Provinsi...');
+            $.getJSON(urlProvinsi, function (res) {
+                res = $.map(res, function (obj) {
+                    obj.text = obj.nama;
+                    return obj;
+                });
+
+                data = [{
+                    id: "",
+                    nama: "- Pilih Provinsi -",
+                    text: "- Pilih Provinsi -"
+                }].concat(res);
+
+                $("#select2-provinsi").select2({
+                    dropdownAutoWidth: true,
+                    width: '100%',
+                    data: data
+                });
+            });
+
+            // Event handler for Provinsi
+            var selectProv = $('#select2-provinsi');
+            $(selectProv).change(function () {
+                var value = $(selectProv).val();
+                clearOptions('select2-kabupaten');
+
+                if (value) {
+                    console.log("on change selectProv");
+                    console.log('Load Kabupaten di ' + value + '...');
+                    $.getJSON(urlKabupaten + value + ".json", function (res) {
+                        res = $.map(res, function (obj) {
+                            obj.text = obj.nama;
+                            return obj;
+                        });
+
+                        data = [{
+                            id: "",
+                            nama: "- Pilih Kabupaten -",
+                            text: "- Pilih Kabupaten -"
+                        }].concat(res);
+
+                        $("#select2-kabupaten").select2({
+                            dropdownAutoWidth: true,
+                            width: '100%',
+                            data: data
+                        }).prop('disabled', false);
+                    });
+                } else {
+                    $("#select2-kabupaten").prop('disabled', true);
+                }
+            });
+
+            // Event handler for Kabupaten
+            var selectKab = $('#select2-kabupaten');
+            $(selectKab).change(function () {
+                var value = $(selectKab).val();
+                clearOptions('select2-kecamatan');
+
+                if (value) {
+                    console.log("on change selectKab");
+                    console.log('Load Kecamatan di ' + value + '...');
+                    $.getJSON(urlKecamatan + value + ".json", function (res) {
+                        if (res && res.length) {
+                            res = $.map(res, function (obj) {
+                                obj.text = obj.nama;
+                                return obj;
+                            });
+
+                            data = [{
+                                id: "",
+                                nama: "- Pilih Kecamatan -",
+                                text: "- Pilih Kecamatan -"
+                            }].concat(res);
+
+                            $("#select2-kecamatan").select2({
+                                dropdownAutoWidth: true,
+                                width: '100%',
+                                data: data
+                            }).prop('disabled', false).trigger('change'); // Enable the dropdown
+                        } else {
+                            console.error('Kecamatan data not found for kabupaten ID: ' + value);
+                        }
+                    }).fail(function() {
+                        console.error('Failed to load Kecamatan data for kabupaten ID: ' + value);
+                    });
+                } else {
+                    $("#select2-kecamatan").prop('disabled', true);
+                }
+            });
+
+            // Event handler for Kecamatan
+            var selectKec = $('#select2-kecamatan');
+            $(selectKec).change(function () {
+                var value = $(selectKec).val();
+                clearOptions('select2-kelurahan');
+
+                if (value) {
+                    console.log("on change selectKec");
+                    console.log('Load Kelurahan di ' + value + '...');
+                    $.getJSON(urlKelurahan + value + ".json", function (res) {
+                        if (res && res.length) {
+                            res = $.map(res, function (obj) {
+                                obj.text = obj.nama;
+                                return obj;
+                            });
+
+                            data = [{
+                                id: "",
+                                nama: "- Pilih Kelurahan -",
+                                text: "- Pilih Kelurahan -"
+                            }].concat(res);
+
+                            $("#select2-kelurahan").select2({
+                                dropdownAutoWidth: true,
+                                width: '100%',
+                                data: data
+                            }).prop('disabled', false); // Enable the dropdown
+                        } else {
+                            console.error('Kelurahan data not found for kecamatan ID: ' + value);
+                        }
+                    }).fail(function() {
+                        console.error('Failed to load Kelurahan data for kecamatan ID: ' + value);
+                    });
+                } else {
+                    $("#select2-kelurahan").prop('disabled', true);
+                }
+            });
+
+        </script>
+        
+
+        <style>
+            .form-group {
+                padding-top: 20px;
+            }
+            .button-save-changes{
+                display: flex;
+                justify-content: center;
+                padding: 20px;
+            }
+            .l-name {
+                display: flex;
+                flex-direction: column;
+            }
+            .f-name {
+                display: flex;
+                flex-direction: column;
+            }
+            .usernames-group {
+                align-items: center;
+                display: flex;
+                flex-direction: row;
+            }
+            .a-content{
+                justify-content: center;
+                align-items: center;
+                flex-direction: column; 
+                display: flex;
+                padding-left:50px;
+                padding-right: 50px;
+                border-radius: 10px;
+                text-decoration: none;
+                color: black;
+                background-color: white;
+                outline: 1px solid black;
+            }
+            
+            .container-content{
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+                height: 95vh;
+            }
+            
+            .profileImg {
+                width: 75px; 
+                height: 75px; 
+                border-radius: 50%; 
+                object-fit: cover; 
+                border: 2px solid black; 
+            }
+            
+            .pp{
+                flex-direction: column;
+                display :flex;
+                align-items: center;
+            }
+            
+            .button-profile {
+                display: flex; 
+                flex-direction: row; 
+                margin-left: 10px; 
+                padding-top: 20px;
+            }
+            
+            .btn {
+                margin-left: 5px;
+                margin-right: 5px;
+                border-radius: 10px;
+            }
+            
+            .body{
+                background-color: #1c2540;
+            }
+        
+        </style>
+        
+        {% include 'includes/footer.html' %}
+        {% endblock content %}
+        
+        {% block javascripts %}
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+        {% endblock javascripts %}
+    </body>
+</html>

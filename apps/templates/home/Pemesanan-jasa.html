@@ -1,0 +1,63 @@
+<title>Pesan jasa</title>
+
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Pemesanan Jasa {% endblock %}
+
+{% block stylesheets %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% include 'includes/navigation.html' %}
+
+{% block content %}
+<main class="container mt-5 pt-6 mb-5">
+
+    {% include 'includes/preloader.html' %}
+
+    <div class="card-status text-center p-4 bg-light border mb-4">
+        <h5 class="text-muted">Tidak ada service yang aktif</h5>
+    </div>
+    
+    <h1 class="text-center mb-4">Pesan Service</h1>
+    <form class="service-form bg-white p-4 shadow-sm rounded">
+        <div class="mb-3">
+            <label for="motor" class="form-label">Motor yang ingin diservice</label>
+            <select class="form-select" id="motor" required>
+                <option selected disabled>Pilih motor</option>
+                <option value="motor1">Motor 1</option>
+                <option value="motor2">Motor 2</option>
+                <option value="motor3">Motor 3</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="tanggal" class="form-label">Tanggal Service</label>
+            <input type="date" id="tanggal" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="tipeService" class="form-label">Tipe Service</label>
+            <select class="form-select" id="tipeService" required>
+                <option selected disabled>Pilih tipe service</option>
+                <option value="gantiOli">Ganti Oli</option>
+                <option value="tuneUp">Tune Up</option>
+                <option value="cekMesin">Cek Mesin</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="keterangan" class="form-label">Keluhan</label>
+            <textarea class="form-control" id="keterangan" rows="3" placeholder="Isi keluhan disini (opsional)"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Pesan Service</button>
+    </form>
+</main>
+
+{% include 'includes/footer.html' %}
+{% endblock content %}
+
+{% block javascripts %}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+{% endblock javascripts %}

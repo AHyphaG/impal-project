@@ -1,0 +1,139 @@
+<title>Pesan Produk</title>
+
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Pemesanan Produk {% endblock %}
+
+{% block stylesheets %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock stylesheets %}
+
+{% include 'includes/navigation.html' %}
+
+{% block content %}
+
+<body>
+
+    {% include 'includes/preloader.html' %}
+
+    <div class="section section-md">
+        <div class="container mt-5">
+            <!-- Search Bar -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products..." aria-label="Search">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- First Row of Cards -->
+            <div class="row mb-4">
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/aki.jpg" class="card-img-top rounded-top" alt="Product1">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Recommended</span>
+                            <h3 class="h5 card-title mt-3">Product1</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/vbelt.jpeg" class="card-img-top rounded-top" alt="Product2">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Top rated</span>
+                            <h3 class="h5 card-title mt-3">Product2</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/busi.jpg" class="card-img-top rounded-top" alt="Product3">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Awards</span>
+                            <h3 class="h5 card-title mt-3">Product3</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row of Cards -->
+            <div class="row">
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/busi.jpg" class="card-img-top rounded-top" alt="Product4">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>New Arrival</span>
+                            <h3 class="h5 card-title mt-3">Product4</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/busi.jpg" class="card-img-top rounded-top" alt="Product5">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Popular</span>
+                            <h3 class="h5 card-title mt-3">Product5</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card shadow">
+                        <div class="ratio ratio-4x3">
+                            <img src="/static/assets/img/products/busi.jpg" class="card-img-top rounded-top" alt="Product6">
+                        </div>
+                        <div class="card-body">
+                            <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Best Seller</span>
+                            <h3 class="h5 card-title mt-3">Product6</h3>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <a href="#" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-shopping-cart me-1 ms-1 small"></i> Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+{% include 'includes/footer.html' %}
+
+
+{% endblock content %}

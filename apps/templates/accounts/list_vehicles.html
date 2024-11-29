@@ -1,0 +1,85 @@
+<title>Kendaraan {{ user.namaBelakang }}</title>
+
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Pemesanan Jasa {% endblock %}
+
+{% block stylesheets %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Ensure the page content stretches to fill the viewport */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1; /* Allow the main content to expand and push the footer down */
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+        }
+    </style>
+{% endblock stylesheets %}
+
+{% include 'includes/navigation.html' %}
+
+{% block content %}
+<body class="bg-light">
+    <!-- Header -->
+    <header class="bg-primary text-white py-4">
+        <div class="container">
+            <h2 class="text-center">Daftar Kendaraan {{ user.namaBelakang }}</h2>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Kendaraan {{ user.namaBelakang }}</</h5>
+            </div>
+            <div class="card-body">
+                {% if vehicles %}
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Jenis</th>
+                                <th>Manufaktur</th>
+                                <th>Tipe</th>
+                                <th>Tahun Keluaran</th>
+                                <th>Nomor Plat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vehicle in vehicles %}
+                            <tr>
+                                <td>{{ vehicle.jenis }}</td>
+                                <td>{{ vehicle.manufaktur }}</td>
+                                <td>{{ vehicle.tipe }}</td>
+                                <td>{{ vehicle.tahunKeluaran }}</td>
+                                <td>{{ vehicle.noPlat }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-warning text-center">
+                    Tidak ada kendaraan yang terdaftar.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+</body>
+{% include 'includes/footer.html' %}
+
+{% endblock content %}
