@@ -1,17 +1,6 @@
 from sqlalchemy import func
 from apps import db
 
-
-class Bengkel(db.Model):
-    _tablename_ = 'bengkel'
-    bengkelId = db.Column(db.Integer, primary_key=True)
-    namaBengkel = db.Column(db.String(30), nullable=False)
-    lokasi = db.Column(db.String(50), nullable=False)
-    noTelp = db.Column(db.Integer, nullable=False)
-
-    montirs = db.relationship('Montir', backref='bengkel', lazy=True)
-    products = db.relationship('Product', backref='bengkel', lazy=True)
-
 class Montir(db.Model):
     _tablename_ = 'montir'
     montirId = db.Column(db.Integer, primary_key=True)

@@ -45,3 +45,28 @@ class CreateInformation(FlaskForm):
                       choices=[('L', 'Male'), ('P', 'Female')], 
                       validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class LoginFormBengkel(FlaskForm):
+    email = StringField('Email Bengkel',
+                            id='email_login',
+                            validators=[DataRequired()])
+    password = PasswordField('Password',
+                                id='pwd_login',
+                                validators=[DataRequired()])
+    
+class CreateBengkelForm(FlaskForm):
+    namaBengkel = StringField('Nama Bengkel',
+                         id='namaBengkel_create',
+                         validators=[DataRequired()])
+    email = StringField('Email',
+                      id='email_create',
+                      validators=[DataRequired(), Email()])
+    password = PasswordField('Password',
+                             id='pwd_create',
+                             validators=[DataRequired()])
+    
+class CreateBengkelInformation(FlaskForm):
+    telepon = StringField('Telepon',
+                            id='noTelp_create',
+                            validators=[DataRequired()])
+    submit = SubmitField('Submit')

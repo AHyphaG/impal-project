@@ -13,8 +13,9 @@ from flask_login import (
 
 from apps import db, login_manager
 from apps.authentication import blueprint
-from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation
+from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation, LoginFormBengkel, CreateBengkelForm, CreateBengkelInformation
 from apps.authentication.models import Users
+from apps.bengkel.models import Bengkel
 from .Vehicles import Vehicles
 
 from apps.authentication.util import verify_pass
@@ -128,6 +129,92 @@ def vehicles():
 def logout():
     logout_user()
     return redirect(url_for('authentication_blueprint.login'))
+
+
+@blueprint.route('/login-bengkel', methods=['GET', 'POST'])
+def loginBengkel():
+    login_form = LoginFormBengkel(request.form)  # Form login khusus Bengkel
+    if 'login-bengkel' in request.form:  # Trigger saat form login di-submit
+
+        email = request.form['username']  # Ambil input email
+        password = request.form['password']  # Ambil input password
+
+        # Cari admin bengkel berdasarkan email
+        admin = Bengkel.query.filter_by(email=email).first()
+
+        # Verifikasi password
+        if admin and verify_pass(password, admin.password):
+            login_user(admin)  # Login sebagai admin bengkel
+            return redirect(url_for('bengkel.bengkel'))  # Redirect ke dashboard Bengkel
+
+        # Jika login gagal, tampilkan pesan error
+        return render_template(
+            'accounts/login_bengkel.html', 
+            msg="Email atau password salah!", 
+            form=login_form
+        )
+
+    # Render halaman login jika request adalah GET
+    return render_template('accounts/login_bengkel.html', form=login_form)
+
+@blueprint.route('/register-bengkel', methods=['GET', 'POST'])
+def register_bengkel():
+    create_bengkel_form = CreateBengkelForm(request.form)
+
+    if 'register' in request.form:
+        nama_bengkel = request.form['namaBengkel']
+        email = request.form['email']
+
+        # Check if the nama_bengkel exists
+        bengkel = Bengkel.query.filter_by(namaBengkel=nama_bengkel).first()
+        if bengkel:
+            return render_template('accounts/register_bengkel.html',
+                                   msg='Nama bengkel sudah terdaftar',
+                                   success=False,
+                                   form=create_bengkel_form)
+
+        # Check if the email exists
+        bengkel = Bengkel.query.filter_by(email=email).first()
+        if bengkel:
+            return render_template('accounts/register_bengkel.html',
+                                   msg='Email sudah terdaftar',
+                                   success=False,
+                                   form=create_bengkel_form)
+
+        # Create the bengkel account
+        bengkel = Bengkel(**request.form)
+        db.session.add(bengkel)
+        db.session.commit()
+
+        # Log in the newly created bengkel account
+        login_user(bengkel)
+        return redirect(url_for('authentication_blueprint.register_bengkel_information'))
+
+    return render_template('accounts/register_bengkel.html', form=create_bengkel_form)
+
+
+@blueprint.route('/register_bengkel_information', methods=['GET', 'POST'])
+@login_required  # Ensure the user is logged in
+def register_bengkel_information():
+    form = CreateBengkelInformation(request.form)
+    bengkel = current_user  # Fetch the current bengkel
+
+    print('Current Bengkel:', bengkel)
+
+    if form.validate_on_submit():
+        # Update the bengkel's information
+        bengkel.alamat = form.alamat.data
+        bengkel.telepon = form.telepon.data
+        bengkel.deskripsi = form.deskripsi.data
+        
+        db.session.commit()
+        print('Bengkel information updated successfully.')
+        return redirect(url_for('home_blueprint.index'))
+
+    # Debug output for any form validation errors
+    print('Form validation errors:', form.errors)
+    
+    return render_template('accounts/create-bengkel-profile.html', form=form)
 
 
 # Errors
