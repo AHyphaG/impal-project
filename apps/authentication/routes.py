@@ -15,7 +15,7 @@ import requests
 
 from apps import db, login_manager
 from apps.authentication import blueprint
-from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation, LoginFormBengkel, CreateBengkelForm, CreateBengkelInformation
+from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation, LoginFormBengkel, CreateBengkelForm, CreateBengkelInformation, EditAlamat
 from apps.authentication.models import Users, Alamat
 from apps.bengkel.models import Bengkel
 from .Vehicles import Vehicles
@@ -159,6 +159,10 @@ def register_information():
             alamat_lengkap=form.alamatLengkap.data,
             nama_alamat=form.namaAlamat.data,
             user_id = user.userID,
+            provid = form.provinsi.data,
+            kabkotid = form.kabkot.data,
+            kecid = form.kecamatan.data,
+            kelid = form.kelurahan.data
         )
         db.session.add(alamat)
         db.session.commit()
@@ -173,6 +177,63 @@ def vehicles():
     user_vehicles = Vehicles.query.filter_by(userID_fk=current_user.userID).all()
     
     return render_template('accounts/list_vehicles.html', vehicles=user_vehicles,user=current_user)
+
+@blueprint.route('/list-alamat')
+@login_required
+def list_alamat():
+    user_alamat = Alamat.query.filter_by(user_id=current_user.userID).all()
+
+    return render_template('accounts/list_alamat.html',alamats=user_alamat,user=current_user)
+
+@blueprint.route('/edit-alamat/<int:alamatIDTerpilih>', methods=['GET', 'POST'])
+@login_required
+def edit_alamat(alamatIDTerpilih):
+    # Ambil data alamat berdasarkan alamatID
+    alamat = Alamat.query.get_or_404(alamatIDTerpilih)
+
+    form = EditAlamat(request.form)
+    user = current_user
+    provinsi_choices = [(prov['id'], prov['nama']) for prov in requests.get("https://ibnux.github.io/data-indonesia/provinsi.json").json()]
+    form.provinsi.choices = provinsi_choices
+
+    if form.provinsi.data:
+        kabupaten_data = requests.get(f"https://ibnux.github.io/data-indonesia/kabupaten/{form.provinsi.data}.json").json()
+        form.kabkot.choices = [(kab['id'], kab['nama']) for kab in kabupaten_data]
+
+    if form.kabkot.data:
+        kecamatan_data = requests.get(f"https://ibnux.github.io/data-indonesia/kecamatan/{form.kabkot.data}.json").json()
+        form.kecamatan.choices = [(kec['id'], kec['nama']) for kec in kecamatan_data]
+
+    if form.kecamatan.data:
+        kelurahan_data = requests.get(f"https://ibnux.github.io/data-indonesia/kelurahan/{form.kecamatan.data}.json").json()
+        form.kelurahan.choices = [(kel['id'], kel['nama']) for kel in kelurahan_data]
+
+    if form.validate_on_submit():
+        provinsi_name = dict(provinsi_choices).get(form.provinsi.data, "Provinsi tidak diketahui")
+        
+        kabkot_name = dict([(kab['id'], kab['nama']) for kab in kabupaten_data]).get(form.kabkot.data, "Kab/Kota tidak diketahui")
+
+        kecamatan_name = dict([(kec['id'], kec['nama']) for kec in kecamatan_data]).get(form.kecamatan.data, "Kecamatan tidak diketahui")
+
+        kelurahan_name = dict([(kel['id'], kel['nama']) for kel in kelurahan_data]).get(form.kelurahan.data, "Kelurahan tidak diketahui")
+
+        
+        alamat.provinsi=provinsi_name,
+        alamat.kabkot=kabkot_name,
+        alamat.kecamatan=kecamatan_name,
+        alamat.kelurahan=kelurahan_name,
+        alamat.alamat_lengkap=form.alamatLengkap.data,
+        alamat.nama_alamat=form.namaAlamat.data,
+        alamat.provid = form.provinsi.data,
+        alamat.kabkotid = form.kabkot.data,
+        alamat.kecid = form.kecamatan.data,
+        alamat.kelid = form.kelurahan.data
+        
+        db.session.commit()
+        print('Data alamat berhasil disimpan ke database.\n')
+        print(f"Provinsi: {provinsi_name}, Kab/Kota: {kabkot_name}, Kecamatan: {kecamatan_name}, Kelurahan: {kelurahan_name}")
+        return redirect(url_for('home_blueprint.index'))
+    return render_template('accounts/edit_alamat.html',form=form,alamatIDTerpilih=alamat.alamatID)
 
 @blueprint.route('/logout')
 def logout():

@@ -89,6 +89,37 @@ class CreateInformation(FlaskForm):
     
     submit = SubmitField('Submit')
 
+class EditAlamat(FlaskForm):  
+    provinsi = SelectField('Provinsi',
+                           validators=[DataRequired()],
+                           choices=[],
+                           render_kw={'id': 'select2-provinsi', 'class': 'form-control'})
+    
+    kabkot = SelectField('Kabupaten/kota',
+                         validators=[DataRequired()],
+                         choices=[],
+                         render_kw={'id': 'select2-kabupaten', 'class': 'form-control'})
+    
+    kecamatan = SelectField('Kecamatan',
+                            validators=[DataRequired()],
+                            choices=[],
+                            render_kw={'id': 'select2-kecamatan', 'class': 'form-control'})
+    
+    kelurahan = SelectField('Kelurahan',
+                            validators=[DataRequired()],
+                            choices =[],
+                            render_kw={'id': 'select2-kelurahan', 'class': 'form-control'})
+    
+    alamatLengkap = StringField('Alamat Lengkap',
+                                validators=[DataRequired()],
+                                id='alamatlengkap')
+    
+    namaAlamat = StringField('Nama Alamat',
+                             validators=[DataRequired()],
+                             id='namaalamat')
+    
+    # Tombol submit
+    submit = SubmitField('Simpan')
 class LoginFormBengkel(FlaskForm):
     email = StringField('Email Bengkel',
                             id='email_login',

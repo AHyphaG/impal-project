@@ -62,6 +62,10 @@ class Alamat(db.Model):
     kelurahan = db.Column(db.String(35))
     alamat_lengkap = db.Column(db.String(255))
     nama_alamat = db.Column(db.String(15))
+    provid = db.Column(db.Integer)
+    kabkotid = db.Column(db.Integer)
+    kelid = db.Column(db.Integer)
+    kecid = db.Column(db.Integer)
 
 
 @login_manager.user_loader
