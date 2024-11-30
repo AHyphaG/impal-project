@@ -29,7 +29,7 @@ class Users(db.Model, UserMixin):
     alamat_active = db.Column(db.Integer, db.ForeignKey('alamat.alamatID'), nullable=True)
 
     # Relasi ke alamat
-    addresses = db.relationship('Alamat', backref='owner', foreign_keys='Alamat.userID')
+    alamat = db.relationship('Alamat', backref='owner', foreign_keys='Alamat.user_id')
 
     # Relasi ke kendaraan
     vehicles = db.relationship('Vehicles', backref='owner', lazy=True)
@@ -51,6 +51,17 @@ class Users(db.Model, UserMixin):
 
     def __repr__(self):
         return str(self.username)
+    
+class Alamat(db.Model):
+    __tablename__ = 'alamat'
+    alamatID = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.userID'))
+    provinsi = db.Column(db.String(35), nullable=False)
+    kabkot = db.Column(db.String(35), nullable=False)
+    kecamatan = db.Column(db.String(35))
+    kelurahan = db.Column(db.String(35))
+    alamat_lengkap = db.Column(db.String(255))
+    nama_alamat = db.Column(db.String(15))
 
 
 @login_manager.user_loader

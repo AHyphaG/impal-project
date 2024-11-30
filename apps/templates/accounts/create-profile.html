@@ -51,29 +51,31 @@
                             </div>
                         </div>
                     
-                        <!-- Dropdowns for Indonesian Locations -->
                         <div class="form-group">
                             <label for="select2-provinsi">Provinsi</label>
-                            <select id="select2-provinsi" class="form-control" required>
-                                <option value="">- Pilih Provinsi -</option>
-                            </select>
-                    
-                            <label for="select2-kabupaten">Kabupaten</label>
-                            <select id="select2-kabupaten" class="form-control" required disabled>
-                                <option value="">- Pilih Kabupaten -</option>
-                            </select>
-                    
-                            <label for="select2-kecamatan">Kecamatan</label>
-                            <select id="select2-kecamatan" class="form-control" required disabled>
-                                <option value="">- Pilih Kecamatan -</option>
-                            </select>
-                    
-                            <label for="select2-kelurahan">Kelurahan</label>
-                            <select id="select2-kelurahan" class="form-control" required disabled>
-                                <option value="">- Pilih Kelurahan -</option>
-                            </select>
+                            {{ form.provinsi(class_="form-control", id="select2-provinsi") }}
                         </div>
-                    
+                        <div class="form-group">
+                            <label for="select2-kabupaten">Kabupaten/Kota</label>
+                            {{ form.kabkot(class_="form-control", id="select2-kabupaten", disabled=True) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="select2-kecamatan">Kecamatan</label>
+                            {{ form.kecamatan(class_="form-control", id="select2-kecamatan", disabled=True) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="select2-kelurahan">Kelurahan</label>
+                            {{ form.kelurahan(class_="form-control", id="select2-kelurahan", disabled=True) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="alamatlengkap">Alamat Lengkap</label>
+                            {{ form.alamatLengkap(class_="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            <label for="namaalamat">Nama Alamat</label>
+                            {{ form.namaAlamat(class_="form-control") }}
+                        </div>
+                        
                         <div class="form-group">
                             <div class="usernames-group">
                                 <div class="f-name">
@@ -99,6 +101,7 @@
                             <label for="phone">Nomor Telepon</label>
                             <input type="tel" class="form-control" name="phone" id="phone" aria-describedby="helpId" required placeholder="Nomor telepon"> -->
                         </div>
+
                         <div class="button-save-changes">
                             {{ form.submit(class="btn btn-primary") }}
                         </div>
@@ -109,143 +112,58 @@
         </main>
 
         <script>
-            var urlProvinsi = "https://ibnux.github.io/data-indonesia/provinsi.json";
-            var urlKabupaten = "https://ibnux.github.io/data-indonesia/kabupaten/";
-            var urlKecamatan = "https://ibnux.github.io/data-indonesia/kecamatan/";
-            var urlKelurahan = "https://ibnux.github.io/data-indonesia/kelurahan/";
-
-            function clearOptions(id) {
-                $('#' + id).empty().trigger('change');
-            }
-
-            console.log('Load Provinsi...');
-            $.getJSON(urlProvinsi, function (res) {
-                res = $.map(res, function (obj) {
-                    obj.text = obj.nama;
-                    return obj;
-                });
-
-                data = [{
-                    id: "",
-                    nama: "- Pilih Provinsi -",
-                    text: "- Pilih Provinsi -"
-                }].concat(res);
-
-                $("#select2-provinsi").select2({
-                    dropdownAutoWidth: true,
-                    width: '100%',
-                    data: data
-                });
-            });
-
-            // Event handler for Provinsi
-            var selectProv = $('#select2-provinsi');
-            $(selectProv).change(function () {
-                var value = $(selectProv).val();
-                clearOptions('select2-kabupaten');
-
-                if (value) {
-                    console.log("on change selectProv");
-                    console.log('Load Kabupaten di ' + value + '...');
-                    $.getJSON(urlKabupaten + value + ".json", function (res) {
-                        res = $.map(res, function (obj) {
-                            obj.text = obj.nama;
-                            return obj;
+            const urlKabupaten = "https://ibnux.github.io/data-indonesia/kabupaten/";
+            const urlKecamatan = "https://ibnux.github.io/data-indonesia/kecamatan/";
+            const urlKelurahan = "https://ibnux.github.io/data-indonesia/kelurahan/";
+        
+            // Event handler untuk Provinsi
+            $('#select2-provinsi').change(function () {
+                const provinsiId = $(this).val();
+                if (provinsiId) {
+                    $.getJSON(urlKabupaten + provinsiId + ".json", function (res) {
+                        let options = '<option value="">- Pilih Kabupaten -</option>';
+                        res.forEach(function (kabupaten) {
+                            options += `<option value="${kabupaten.id}">${kabupaten.nama}</option>`;
                         });
-
-                        data = [{
-                            id: "",
-                            nama: "- Pilih Kabupaten -",
-                            text: "- Pilih Kabupaten -"
-                        }].concat(res);
-
-                        $("#select2-kabupaten").select2({
-                            dropdownAutoWidth: true,
-                            width: '100%',
-                            data: data
-                        }).prop('disabled', false);
+                        $('#select2-kabupaten').html(options).prop('disabled', false);
                     });
                 } else {
-                    $("#select2-kabupaten").prop('disabled', true);
+                    $('#select2-kabupaten').html('<option value="">- Pilih Kabupaten -</option>').prop('disabled', true);
+                    $('#select2-kecamatan, #select2-kelurahan').html('<option value="">- Pilih -</option>').prop('disabled', true);
                 }
             });
-
-            // Event handler for Kabupaten
-            var selectKab = $('#select2-kabupaten');
-            $(selectKab).change(function () {
-                var value = $(selectKab).val();
-                clearOptions('select2-kecamatan');
-
-                if (value) {
-                    console.log("on change selectKab");
-                    console.log('Load Kecamatan di ' + value + '...');
-                    $.getJSON(urlKecamatan + value + ".json", function (res) {
-                        if (res && res.length) {
-                            res = $.map(res, function (obj) {
-                                obj.text = obj.nama;
-                                return obj;
-                            });
-
-                            data = [{
-                                id: "",
-                                nama: "- Pilih Kecamatan -",
-                                text: "- Pilih Kecamatan -"
-                            }].concat(res);
-
-                            $("#select2-kecamatan").select2({
-                                dropdownAutoWidth: true,
-                                width: '100%',
-                                data: data
-                            }).prop('disabled', false).trigger('change'); // Enable the dropdown
-                        } else {
-                            console.error('Kecamatan data not found for kabupaten ID: ' + value);
-                        }
-                    }).fail(function() {
-                        console.error('Failed to load Kecamatan data for kabupaten ID: ' + value);
+        
+            // Event handler untuk Kabupaten
+            $('#select2-kabupaten').change(function () {
+                const kabupatenId = $(this).val();
+                if (kabupatenId) {
+                    $.getJSON(urlKecamatan + kabupatenId + ".json", function (res) {
+                        let options = '<option value="">- Pilih Kecamatan -</option>';
+                        res.forEach(function (kecamatan) {
+                            options += `<option value="${kecamatan.id}">${kecamatan.nama}</option>`;
+                        });
+                        $('#select2-kecamatan').html(options).prop('disabled', false);
                     });
                 } else {
-                    $("#select2-kecamatan").prop('disabled', true);
+                    $('#select2-kecamatan, #select2-kelurahan').html('<option value="">- Pilih -</option>').prop('disabled', true);
                 }
             });
-
-            // Event handler for Kecamatan
-            var selectKec = $('#select2-kecamatan');
-            $(selectKec).change(function () {
-                var value = $(selectKec).val();
-                clearOptions('select2-kelurahan');
-
-                if (value) {
-                    console.log("on change selectKec");
-                    console.log('Load Kelurahan di ' + value + '...');
-                    $.getJSON(urlKelurahan + value + ".json", function (res) {
-                        if (res && res.length) {
-                            res = $.map(res, function (obj) {
-                                obj.text = obj.nama;
-                                return obj;
-                            });
-
-                            data = [{
-                                id: "",
-                                nama: "- Pilih Kelurahan -",
-                                text: "- Pilih Kelurahan -"
-                            }].concat(res);
-
-                            $("#select2-kelurahan").select2({
-                                dropdownAutoWidth: true,
-                                width: '100%',
-                                data: data
-                            }).prop('disabled', false); // Enable the dropdown
-                        } else {
-                            console.error('Kelurahan data not found for kecamatan ID: ' + value);
-                        }
-                    }).fail(function() {
-                        console.error('Failed to load Kelurahan data for kecamatan ID: ' + value);
+        
+            // Event handler untuk Kecamatan
+            $('#select2-kecamatan').change(function () {
+                const kecamatanId = $(this).val();
+                if (kecamatanId) {
+                    $.getJSON(urlKelurahan + kecamatanId + ".json", function (res) {
+                        let options = '<option value="">- Pilih Kelurahan -</option>';
+                        res.forEach(function (kelurahan) {
+                            options += `<option value="${kelurahan.id}">${kelurahan.nama}</option>`;
+                        });
+                        $('#select2-kelurahan').html(options).prop('disabled', false);
                     });
                 } else {
-                    $("#select2-kelurahan").prop('disabled', true);
+                    $('#select2-kelurahan').html('<option value="">- Pilih Kelurahan -</option>').prop('disabled', true);
                 }
             });
-
         </script>
         
 
