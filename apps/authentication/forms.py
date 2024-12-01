@@ -140,7 +140,12 @@ class CreateBengkelForm(FlaskForm):
                              validators=[DataRequired()])
     
 class CreateBengkelInformation(FlaskForm):
-    telepon = StringField('Telepon',
+    noTelp = StringField('Telepon',
                             id='noTelp_create',
                             validators=[DataRequired()])
+
+    lokasi = StringField('Lokasi',
+                            id='lokasi_create',
+                            validators=[DataRequired()])
+
     submit = SubmitField('Submit')

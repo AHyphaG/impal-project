@@ -270,8 +270,7 @@ def loginBengkel():
 @blueprint.route('/register-bengkel', methods=['GET', 'POST'])
 def register_bengkel():
     create_bengkel_form = CreateBengkelForm(request.form)
-
-    if 'register' in request.form:
+    if 'register_bengkel' in request.form:
         nama_bengkel = request.form['namaBengkel']
         email = request.form['email']
 
@@ -292,30 +291,36 @@ def register_bengkel():
                                    form=create_bengkel_form)
 
         # Create the bengkel account
-        bengkel = Bengkel(**request.form)
-        db.session.add(bengkel)
+        # bengkel1 = Bengkel(**request.form)
+        bengkel1 = Bengkel(
+            namaBengkel=request.form['namaBengkel'],
+            email=request.form['email'],
+            password=request.form['password'],  # assuming you're hashing the password before saving it
+            noTelp=0,  # ensure this is an integer or convert it
+            lokasi="default"  # set 'lokasi' to None initially
+        )
+        db.session.add(bengkel1)
         db.session.commit()
 
         # Log in the newly created bengkel account
-        login_user(bengkel)
+        login_user(bengkel1)
         return redirect(url_for('authentication_blueprint.register_bengkel_information'))
 
     return render_template('accounts/register_bengkel.html', form=create_bengkel_form)
 
 
-@blueprint.route('/register_bengkel_information', methods=['GET', 'POST'])
+@blueprint.route('/register-bengkel-information', methods=['GET', 'POST'])
 @login_required  # Ensure the user is logged in
 def register_bengkel_information():
     form = CreateBengkelInformation(request.form)
-    bengkel = current_user  # Fetch the current bengkel
+    bengkel = current_user
 
-    print('Current Bengkel:', bengkel)
+    print('Current Bengkel:', bengkel.namaBengkel)
 
     if form.validate_on_submit():
         # Update the bengkel's information
-        bengkel.alamat = form.alamat.data
-        bengkel.telepon = form.telepon.data
-        bengkel.deskripsi = form.deskripsi.data
+        # bengkel.lokasi = form.lokasi.data
+        bengkel.noTelp = form.noTelp.data
         
         db.session.commit()
         print('Bengkel information updated successfully.')
