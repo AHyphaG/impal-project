@@ -128,7 +128,7 @@ def register_information():
         customer.sex = form.sex.data
         db.session.add(customer)
         db.session.commit()
-        
+
         save_address_to_db(form,user,option['provinsi'])
         print('Data alamat berhasil disimpan ke database.\n')
         return redirect(url_for('home_blueprint.index'))
