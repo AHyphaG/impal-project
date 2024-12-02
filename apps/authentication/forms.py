@@ -116,24 +116,36 @@ class LoginFormBengkel(FlaskForm):
                                 id='pwd_login',
                                 validators=[DataRequired()])
     
-class CreateBengkelForm(FlaskForm):
-    namaBengkel = StringField('Nama Bengkel',
-                         id='namaBengkel_create',
-                         validators=[DataRequired()])
-    email = StringField('Email',
-                      id='email_create',
-                      validators=[DataRequired(), Email()])
-    password = PasswordField('Password',
-                             id='pwd_create',
-                             validators=[DataRequired()])
-    
 class CreateBengkelInformation(FlaskForm):
-    noTelp = StringField('Telepon',
-                            id='noTelp_create',
+    namaBengkel = StringField('Nama Bengkel',
+                            id='namaBengkel_create',
                             validators=[DataRequired()])
-
-    lokasi = StringField('Lokasi',
-                            id='lokasi_create',
-                            validators=[DataRequired()])
+    provinsi = SelectField('Provinsi',
+                           validators=[DataRequired()],
+                           choices=[],
+                           render_kw={'id': 'select2-provinsi', 'class': 'form-control'})
+    
+    kabkot = SelectField('Kabupaten/kota',
+                         validators=[DataRequired()],
+                         choices=[],
+                         render_kw={'id': 'select2-kabupaten', 'class': 'form-control', 'disabled': 'disabled'})
+    
+    kecamatan = SelectField('Kecamatan',
+                            validators=[DataRequired()],
+                            choices=[],
+                            render_kw={'id': 'select2-kecamatan', 'class': 'form-control', 'disabled': 'disabled'})
+    
+    kelurahan = SelectField('Kelurahan',
+                            validators=[DataRequired()],
+                            choices =[],
+                            render_kw={'id': 'select2-kelurahan', 'class': 'form-control', 'disabled': 'disabled'})
+    
+    alamatLengkap = StringField('Alamat Lengkap',
+                                validators=[DataRequired()],
+                                id='alamatlengkap')
+    
+    namaAlamat = StringField('Nama Alamat',
+                             validators=[DataRequired()],
+                             id='namaalamat')
 
     submit = SubmitField('Submit')

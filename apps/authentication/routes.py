@@ -15,7 +15,7 @@ import requests
 
 from apps import db, login_manager
 from apps.authentication import blueprint
-from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation, LoginFormBengkel, CreateBengkelForm, CreateBengkelInformation, EditAlamat
+from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation, LoginFormBengkel, CreateBengkelInformation, EditAlamat
 from apps.authentication.models import Users
 from apps.authentication.Alamat import Alamat
 from apps.authentication.Customer import Customer
@@ -23,7 +23,7 @@ from apps.authentication.Bengkel import Bengkel
 
 from .Vehicles import Vehicles
 
-from apps.authentication.util import verify_pass
+from apps.authentication.util import *
 
 
 @blueprint.route('/')
@@ -117,52 +117,20 @@ def register():
 def register_information():
     form = CreateInformation(request.form)
     user = current_user
-    provinsi_choices = [(prov['id'], prov['nama']) for prov in requests.get("https://ibnux.github.io/data-indonesia/provinsi.json").json()]
-    form.provinsi.choices = provinsi_choices
-
-    if form.provinsi.data:
-        kabupaten_data = requests.get(f"https://ibnux.github.io/data-indonesia/kabupaten/{form.provinsi.data}.json").json()
-        form.kabkot.choices = [(kab['id'], kab['nama']) for kab in kabupaten_data]
-
-    if form.kabkot.data:
-        kecamatan_data = requests.get(f"https://ibnux.github.io/data-indonesia/kecamatan/{form.kabkot.data}.json").json()
-        form.kecamatan.choices = [(kec['id'], kec['nama']) for kec in kecamatan_data]
-
-    if form.kecamatan.data:
-        kelurahan_data = requests.get(f"https://ibnux.github.io/data-indonesia/kelurahan/{form.kecamatan.data}.json").json()
-        form.kelurahan.choices = [(kel['id'], kel['nama']) for kel in kelurahan_data]
+    
+    option, is_valid, form = cekFormAlamat(form)
 
     customer = Customer.query.filter_by(user_id_fk=user.id).first()
 
-    if form.validate_on_submit():
+    if form.validate_on_submit() and is_valid:
         customer.namaDepan = form.namaDepan.data
         customer.namaBelakang = form.namaBelakang.data
         customer.sex = form.sex.data
-        provinsi_name = dict(provinsi_choices).get(form.provinsi.data, "Provinsi tidak diketahui")
-        
-        kabkot_name = dict([(kab['id'], kab['nama']) for kab in kabupaten_data]).get(form.kabkot.data, "Kab/Kota tidak diketahui")
-
-        kecamatan_name = dict([(kec['id'], kec['nama']) for kec in kecamatan_data]).get(form.kecamatan.data, "Kecamatan tidak diketahui")
-
-        kelurahan_name = dict([(kel['id'], kel['nama']) for kel in kelurahan_data]).get(form.kelurahan.data, "Kelurahan tidak diketahui")
-
-        alamat = Alamat(
-            provinsi=provinsi_name,
-            kabkot=kabkot_name,
-            kecamatan=kecamatan_name,
-            kelurahan=kelurahan_name,
-            alamat_lengkap=form.alamatLengkap.data,
-            nama_alamat=form.namaAlamat.data,
-            user_id = user.id,
-            provid = form.provinsi.data,
-            kabkotid = form.kabkot.data,
-            kecid = form.kecamatan.data,
-            kelid = form.kelurahan.data
-        )
-        db.session.add(alamat)
+        db.session.add(customer)
         db.session.commit()
+        
+        save_address_to_db(form,user,option['provinsi'])
         print('Data alamat berhasil disimpan ke database.\n')
-        print(f"Provinsi: {provinsi_name}, Kab/Kota: {kabkot_name}, Kecamatan: {kecamatan_name}, Kelurahan: {kelurahan_name}")
         return redirect(url_for('home_blueprint.index'))
     return render_template('accounts/create-profile.html',form=form)
 
@@ -262,62 +230,72 @@ def loginBengkel():
 
 @blueprint.route('/register-bengkel', methods=['GET', 'POST'])
 def register_bengkel():
-    create_bengkel_form = CreateBengkelForm(request.form)
-
+    create_account_form = CreateAccountForm(request.form)
+    
     if 'register' in request.form:
-        nama_bengkel = request.form['namaBengkel']
+        username = request.form['username']
         email = request.form['email']
 
-        # Check if the nama_bengkel exists
-        bengkel = Bengkel.query.filter_by(namaBengkel=nama_bengkel).first()
-        if bengkel:
-            return render_template('accounts/register_bengkel.html',
-                                   msg='Nama bengkel sudah terdaftar',
+        user = Users.query.filter_by(username=username).first()
+        if user:
+            return render_template('accounts/register.html',
+                                   msg='Username already registered',
                                    success=False,
-                                   form=create_bengkel_form)
+                                   form=create_account_form)
 
-        # Check if the email exists
-        bengkel = Bengkel.query.filter_by(email=email).first()
-        if bengkel:
-            return render_template('accounts/register_bengkel.html',
-                                   msg='Email sudah terdaftar',
+        user = Users.query.filter_by(email=email).first()
+        if user:
+            return render_template('accounts/register.html',
+                                   msg='Email already registered',
                                    success=False,
-                                   form=create_bengkel_form)
+                                   form=create_account_form)
 
-        # Create the bengkel account
-        bengkel = Bengkel(**request.form)
+        user = Users(**request.form)
+        user.role = "Bengkel"
+        db.session.add(user)
+        db.session.commit()
+
+        bengkel = Bengkel(
+            namaBengkel = "init1",
+            user_id_fk = user.id
+        )
         db.session.add(bengkel)
         db.session.commit()
 
-        # Log in the newly created bengkel account
-        login_user(bengkel)
+        login_user(user)
         return redirect(url_for('authentication_blueprint.register_bengkel_information'))
 
-    return render_template('accounts/register_bengkel.html', form=create_bengkel_form)
+    return render_template('accounts/register.html', form=create_account_form)
 
 
-@blueprint.route('/register_bengkel_information', methods=['GET', 'POST'])
-@login_required(role="ANY")  # Ensure the user is logged in
+@blueprint.route('/register-bengkel-information', methods=['GET', 'POST'])
+@login_required(role="Bengkel")
 def register_bengkel_information():
     form = CreateBengkelInformation(request.form)
-    bengkel = current_user  # Fetch the current bengkel
+    user = current_user
 
-    print('Current Bengkel:', bengkel)
+    option, is_valid, form = cekFormAlamat(form)
 
-    if form.validate_on_submit():
-        # Update the bengkel's information
-        bengkel.alamat = form.alamat.data
-        bengkel.telepon = form.telepon.data
-        bengkel.deskripsi = form.deskripsi.data
-        
-        db.session.commit()
-        print('Bengkel information updated successfully.')
-        return redirect(url_for('home_blueprint.index'))
+    print('Current Bengkel:', user)
+    bengkel = Bengkel.query.filter_by(user_id_fk=user.id).first()
 
-    # Debug output for any form validation errors
+    if form.validate_on_submit() and is_valid:
+        if not user.alamat:
+            bengkel.namaBengkel = form.namaBengkel.data
+            db.session.add(bengkel)
+            db.session.commit()
+
+            save_address_to_db(form, user, option['provinsi'])
+            print('Alamat Bengkel Sudah Ditambahkan.')
+            return redirect(url_for('home_blueprint.index'))
+        else:
+            update_address_in_db(form, user.alamat, option['provinsi'])
+
+
     print('Form validation errors:', form.errors)
-    
-    return render_template('accounts/create-bengkel-profile.html', form=form)
+
+    return render_template('accounts/create-bengkel-profile.html', form=form, option=option)
+
 
 
 # Errors
