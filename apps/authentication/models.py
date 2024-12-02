@@ -4,36 +4,26 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from flask_login import UserMixin
-from sqlalchemy.orm import synonym
 from apps import db, login_manager
 
 from apps.authentication.util import hash_pass
 
 class Users(db.Model, UserMixin):
-
     __tablename__ = 'users'
-
     #Kolom
-    # id = db.Column(db.Integer, primary_key=True)
-    userID = db.Column(db.Integer, primary_key=True)
-    id = synonym('userID')
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
-    email = db.Column(db.String(64), unique=True, nullable=False)
     password = db.Column(db.LargeBinary, nullable=False)
-    namaDepan = db.Column(db.String(64), nullable=False)
-    namaBelakang = db.Column(db.String(64), nullable=False)
-    sex = db.Column(db.String(6))
-    nomorHp = db.Column(db.String(64), nullable=False)
-
-    #Hubungan
+    email = db.Column(db.String(64), unique=True, nullable=False)
     alamat_active = db.Column(db.Integer, db.ForeignKey('alamat.alamatID'), nullable=True)
+    nomorHp = db.Column(db.String(64), nullable=False)
+    role = db.Column(db.String(10),nullable = False)
 
-    # Relasi ke alamat
+    # Relasi
     alamat = db.relationship('Alamat', backref='owner', foreign_keys='Alamat.user_id')
-
-    # Relasi ke kendaraan
     vehicles = db.relationship('Vehicles', backref='owner', lazy=True)
-
+    customer = db.relationship('Customer', backref = 'owner')
+    bengkel = db.relationship('Bengkel', backref = 'owner')
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -51,21 +41,18 @@ class Users(db.Model, UserMixin):
 
     def __repr__(self):
         return str(self.username)
+
+    def get_id(self):
+        return self.id
+    def is_active(self):
+        return self.is_active
+    def activate_user(self):
+        self.is_active = True         
+    def get_username(self):
+        return self.username
+    def get_urole(self):
+        return self.role
     
-class Alamat(db.Model):
-    __tablename__ = 'alamat'
-    alamatID = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.userID'))
-    provinsi = db.Column(db.String(35), nullable=False)
-    kabkot = db.Column(db.String(35), nullable=False)
-    kecamatan = db.Column(db.String(35))
-    kelurahan = db.Column(db.String(35))
-    alamat_lengkap = db.Column(db.String(255))
-    nama_alamat = db.Column(db.String(15))
-    provid = db.Column(db.Integer)
-    kabkotid = db.Column(db.Integer)
-    kelid = db.Column(db.Integer)
-    kecid = db.Column(db.Integer)
 
 
 @login_manager.user_loader

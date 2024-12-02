@@ -33,18 +33,6 @@ class CreateAccountForm(FlaskForm):
                         id='no_hp_create',
                         validators=[DataRequired()])
     
-# class CreateInformation(FlaskForm):
-#     namaDepan = StringField('Nama Depan',
-#                             id='nama_depan_create',
-#                             validators=[DataRequired()])
-#     namaBelakang = StringField('Nama Belakang',
-#                             id='nama_belakang_create',
-#                             validators=[DataRequired()])
-#     sex = SelectField('Jenis Kelamin', 
-#                       id= 'jenis_kelamin_create',
-#                       choices=[('L', 'Male'), ('P', 'Female')], 
-#                       validators=[DataRequired()])
-#     submit = SubmitField('Submit')
 class CreateInformation(FlaskForm):
     namaDepan = StringField('Nama Depan',
                             id='nama_depan_create',
@@ -140,7 +128,12 @@ class CreateBengkelForm(FlaskForm):
                              validators=[DataRequired()])
     
 class CreateBengkelInformation(FlaskForm):
-    telepon = StringField('Telepon',
+    noTelp = StringField('Telepon',
                             id='noTelp_create',
                             validators=[DataRequired()])
+
+    lokasi = StringField('Lokasi',
+                            id='lokasi_create',
+                            validators=[DataRequired()])
+
     submit = SubmitField('Submit')

@@ -13,14 +13,14 @@ from apps.home.forms import ProfileForm
 
 
 @blueprint.route('/index')
-@login_required
+@login_required(role="ANY")
 def index():
 
     return render_template('home/index.html', segment='index')
 
 
 @blueprint.route('/<template>')
-@login_required
+@login_required(role="ANY")
 def route_template(template):
 
     try:
@@ -57,7 +57,7 @@ def get_segment(request):
         return None
     
 @blueprint.route('/profile', methods=['GET', 'POST'])
-@login_required
+@login_required(role="ANY")
 def profile():
     user = current_user
     form = ProfileForm()

@@ -9,7 +9,7 @@ from apps.pemesanan.forms import RegisterKendaraanForm
 
 
 @blueprint.route('/order-montir', methods=['GET', 'POST'])
-@login_required  # Protect this route with the login_required decorator
+@login_required(role="ANY")  # Protect this route with the login_required decorator
 def order_montir():
     vehicles = Vehicles.query.filter_by(userID_fk=current_user.id).all()
     
@@ -36,7 +36,7 @@ def order_montir():
 
 
 @blueprint.route('/register-kendaraan', methods=['GET', 'POST'])
-@login_required  # Protect this route with the login_required decorator
+@login_required(role="ANY")  # Protect this route with the login_required decorator
 def register_kendaraan():
     form = RegisterKendaraanForm()  # Buat instance form
     if form.validate_on_submit():  # Periksa apakah form valid

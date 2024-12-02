@@ -13,7 +13,7 @@ from apps.authentication.util import verify_pass
 
 
 @blueprint.route('/bengkel')
-@login_required
+@login_required(role="ANY")
 def bengkel():
     return render_template('bengkel/bengkel.html')
 

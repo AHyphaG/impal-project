@@ -16,8 +16,11 @@ import requests
 from apps import db, login_manager
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation, LoginFormBengkel, CreateBengkelForm, CreateBengkelInformation, EditAlamat
-from apps.authentication.models import Users, Alamat
-from apps.bengkel.models import Bengkel
+from apps.authentication.models import Users
+from apps.authentication.Alamat import Alamat
+from apps.authentication.Customer import Customer
+from apps.authentication.Bengkel import Bengkel
+
 from .Vehicles import Vehicles
 
 from apps.authentication.util import verify_pass
@@ -90,37 +93,27 @@ def register():
 
         # Create the user
         user = Users(**request.form)
+        user.role = "Customer"
         db.session.add(user)
         db.session.commit()
+
+        customer = Customer(
+            namaDepan = "init1",
+            namaBelakang = "init1",
+            sex = "init1",
+            user_id_fk = user.id
+        )
+        db.session.add(customer)
+        db.session.commit()
+
         login_user(user)
         return redirect(url_for('authentication_blueprint.register_information'))
 
     return render_template('accounts/register.html', form=create_account_form)
 
-# @blueprint.route('/register_information', methods=['GET', 'POST'])
-# @login_required
-# def register_information():
-#     form = CreateInformation(request.form)
-#     user = current_user  # Fetch the current user
 
-#     print('Current User:', user)
-
-#     if form.validate_on_submit():
-#         # Update the user's information
-#         user.namaDepan = form.namaDepan.data
-#         user.namaBelakang = form.namaBelakang.data
-#         user.sex = form.sex.data
-        
-#         db.session.commit()
-#         print('User information updated successfully.')
-#         return redirect(url_for('home_blueprint.index'))
-
-#     # Debug output for any form validation errors
-#     print('Form validation errors:', form.errors)
-    
-#     return render_template('accounts/create-profile.html', form=form)
 @blueprint.route('/register_information', methods=['GET', 'POST'])
-@login_required
+@login_required(role="ANY")
 def register_information():
     form = CreateInformation(request.form)
     user = current_user
@@ -139,10 +132,12 @@ def register_information():
         kelurahan_data = requests.get(f"https://ibnux.github.io/data-indonesia/kelurahan/{form.kecamatan.data}.json").json()
         form.kelurahan.choices = [(kel['id'], kel['nama']) for kel in kelurahan_data]
 
+    customer = Customer.query.filter_by(user_id_fk=user.id).first()
+
     if form.validate_on_submit():
-        user.namaDepan = form.namaDepan.data
-        user.namaBelakang = form.namaBelakang.data
-        user.sex = form.sex.data
+        customer.namaDepan = form.namaDepan.data
+        customer.namaBelakang = form.namaBelakang.data
+        customer.sex = form.sex.data
         provinsi_name = dict(provinsi_choices).get(form.provinsi.data, "Provinsi tidak diketahui")
         
         kabkot_name = dict([(kab['id'], kab['nama']) for kab in kabupaten_data]).get(form.kabkot.data, "Kab/Kota tidak diketahui")
@@ -158,7 +153,7 @@ def register_information():
             kelurahan=kelurahan_name,
             alamat_lengkap=form.alamatLengkap.data,
             nama_alamat=form.namaAlamat.data,
-            user_id = user.userID,
+            user_id = user.id,
             provid = form.provinsi.data,
             kabkotid = form.kabkot.data,
             kecid = form.kecamatan.data,
@@ -172,27 +167,25 @@ def register_information():
     return render_template('accounts/create-profile.html',form=form)
 
 @blueprint.route('/vehicles')
-@login_required
+@login_required(role="Customer")
 def vehicles():
     user_vehicles = Vehicles.query.filter_by(userID_fk=current_user.userID).all()
     
     return render_template('accounts/list_vehicles.html', vehicles=user_vehicles,user=current_user)
 
 @blueprint.route('/list-alamat')
-@login_required
+@login_required(role="ANY")
 def list_alamat():
     user_alamat = Alamat.query.filter_by(user_id=current_user.userID).all()
 
     return render_template('accounts/list_alamat.html',alamats=user_alamat,user=current_user)
 
 @blueprint.route('/edit-alamat/<int:alamatIDTerpilih>', methods=['GET', 'POST'])
-@login_required
+@login_required(role="ANY")
 def edit_alamat(alamatIDTerpilih):
-    # Ambil data alamat berdasarkan alamatID
     alamat = Alamat.query.get_or_404(alamatIDTerpilih)
 
     form = EditAlamat(request.form)
-    user = current_user
     provinsi_choices = [(prov['id'], prov['nama']) for prov in requests.get("https://ibnux.github.io/data-indonesia/provinsi.json").json()]
     form.provinsi.choices = provinsi_choices
 
@@ -304,7 +297,7 @@ def register_bengkel():
 
 
 @blueprint.route('/register_bengkel_information', methods=['GET', 'POST'])
-@login_required  # Ensure the user is logged in
+@login_required(role="ANY")  # Ensure the user is logged in
 def register_bengkel_information():
     form = CreateBengkelInformation(request.form)
     bengkel = current_user  # Fetch the current bengkel

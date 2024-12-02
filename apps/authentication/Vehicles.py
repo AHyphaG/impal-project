@@ -8,4 +8,4 @@ class Vehicles(db.Model):
     tipe = db.Column(db.String(50), nullable=False)
     tahunKeluaran = db.Column(db.String(10), nullable=False)
     noPlat = db.Column(db.String(10), nullable=False)
-    userID_fk = db.Column(db.Integer, db.ForeignKey('users.userID'), nullable=True)
+    userID_fk = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
