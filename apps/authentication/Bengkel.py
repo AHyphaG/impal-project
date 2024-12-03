@@ -7,5 +7,8 @@ class Bengkel(db.Model):
     bengkelId = db.Column(db.Integer, primary_key=True)
     user_id_fk = db.Column(db.Integer, db.ForeignKey('users.id'))
     
+    # Relasi
+    employee = db.relationship('Montir', backref='owner', lazy=True)
+
     def __repr__(self):
         return f"<Bengkel {self.namaBengkel}>"

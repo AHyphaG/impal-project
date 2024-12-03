@@ -15,11 +15,12 @@ import requests
 
 from apps import db, login_manager
 from apps.authentication import blueprint
-from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation, LoginFormBengkel, CreateBengkelInformation, EditAlamat
+from apps.authentication.forms import LoginForm, CreateAccountForm, CreateInformation, LoginFormBengkel, CreateBengkelInformation,CreateMontirInformation, EditAlamat
 from apps.authentication.models import Users
 from apps.authentication.Alamat import Alamat
 from apps.authentication.Customer import Customer
 from apps.authentication.Bengkel import Bengkel
+from apps.authentication.Montir import Montir
 
 from .Vehicles import Vehicles
 
@@ -295,6 +296,85 @@ def register_bengkel_information():
     print('Form validation errors:', form.errors)
 
     return render_template('accounts/create-bengkel-profile.html', form=form, option=option)
+
+
+@blueprint.route('/register-montir', methods=['GET', 'POST'])
+def register_montir():
+    create_account_form = CreateAccountForm(request.form)
+    
+    if 'register' in request.form:
+        username = request.form['username']
+        email = request.form['email']
+        
+        user = Users.query.filter_by(username=username).first()
+        if user:
+            return render_template('accounts/register.html',
+                                   msg='Username already registered',
+                                   success=False,
+                                   form=create_account_form)
+
+        user = Users.query.filter_by(email=email).first()
+        if user:
+            return render_template('accounts/register.html',
+                                   msg='Email already registered',
+                                   success=False,
+                                   form=create_account_form)
+
+        user = Users(**request.form)
+        user.role = "Montir"
+        db.session.add(user)
+        db.session.commit()
+
+        # montir = Montir(
+        #     firstName = "init1",
+        #     lastName = "init1",
+        #     sex = "init1",
+        #     tanggalLahir = "init1",
+        #     tempatLahir = "init1",
+        #     user_id_fk = user.id
+        # )
+        # # db.session.add(montir)
+        # db.session.commit()
+
+        login_user(user)
+        return redirect(url_for('authentication_blueprint.register_montir_information'))
+
+    return render_template('accounts/register.html', form=create_account_form)
+
+
+@blueprint.route('/register-montir-information', methods=['GET', 'POST'])
+@login_required(role="Montir")
+def register_montir_information():
+    form = CreateMontirInformation(request.form)
+    user = current_user
+
+    option, is_valid, form = cekFormAlamat(form)
+
+    print('Current Montir:', user)
+    
+    montir=Montir()
+    if form.validate_on_submit() and is_valid:
+        if not user.alamat:
+            montir.firstName = form.firstName.data
+            montir.lastName = form.lastName.data
+            montir.sex = form.sex.data
+            montir.tanggalLahir = form.tanggalLahir.data
+            montir.tempatLahir = form.tempatLahir.data
+            montir.is_available = False
+            montir.user_id_fk=user.id
+            db.session.add(montir)
+            db.session.commit()
+
+            save_address_to_db(form, user, option['provinsi'])
+            print('Alamat Montir Sudah Ditambahkan.')
+            return redirect(url_for('home_blueprint.index'))
+        else:
+            update_address_in_db(form, user.alamat, option['provinsi'])
+
+
+    print('Form validation errors:', form.errors)
+
+    return render_template('accounts/create-montir-profile.html', form=form, option=option)
 
 
 

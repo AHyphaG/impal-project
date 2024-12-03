@@ -1,18 +1,6 @@
 from sqlalchemy import func
 from apps import db
 
-class Montir(db.Model):
-    _tablename_ = 'montir'
-    montirId = db.Column(db.Integer, primary_key=True)
-    firstName = db.Column(db.String(10), nullable=False)
-    lastName = db.Column(db.String(20), nullable=False)
-    sex = db.Column(db.Boolean, nullable=False)
-    tanggalLahir = db.Column(db.Date, nullable=False)
-    tempatLahir = db.Column(db.String(15), nullable=False)
-    bengkelIdFK = db.Column(db.Integer, db.ForeignKey('bengkel.bengkelId'), nullable=False)
-    is_availaible = db.Column(db.Boolean, nullable = True)
-
-    orders = db.relationship('Orders', backref='montir', lazy=True)
 
 class Orders(db.Model):
     _tablename_ = 'orders'
