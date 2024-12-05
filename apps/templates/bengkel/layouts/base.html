@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <title>{% block title %}{% endblock title %} | Flask Datta Able </title>
+
+    <link rel="canonical" href="https://app-generator.dev/product/datta-able/flask/" />
+
+    {% include "bengkel/includes/head.html" %}
+    {% block extrastyle %}{% endblock extrastyle %}
+
+  </head>
+
+  <body data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-direction="ltr" data-pc-theme="light">
+    {% block loader %}
+      {% include "bengkel/includes/loader.html" %}
+    {% endblock loader %}
+    
+ <!-- Menampilkan pesan flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div>
+                      {{ message }}
+                    </div>
+                        
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <style>
+          .flash-messages {
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              z-index: 9999;
+          }
+
+          .flash-messages .alert {
+              margin-bottom: 10px;
+          }
+        </style>
+    {% endwith %}
+
+    {% block sidebar %}
+        {% include "bengkel/includes/sidebar.html" %}
+    {% endblock sidebar %}
+
+    {% block navigation %}
+      {% include "bengkel/includes/navigation.html" %}
+    {% endblock navigation %}
+
+    {% block content %}{% endblock content %}
+     
+    {% block footer %}
+      {% include "bengkel/includes/footer.html" %}
+    {% endblock footer %}
+
+    {% include "bengkel/includes/scripts.html" %}
+    {% block extra_js %}{% endblock extra_js %}
+  
+  </body>
+</html>

@@ -138,14 +138,14 @@ def register_information():
 @blueprint.route('/vehicles')
 @login_required(role="Customer")
 def vehicles():
-    user_vehicles = Vehicles.query.filter_by(userID_fk=current_user.userID).all()
+    user_vehicles = Vehicles.query.filter_by(userID_fk=current_user.id).all()
     
     return render_template('accounts/list_vehicles.html', vehicles=user_vehicles,user=current_user)
 
 @blueprint.route('/list-alamat')
 @login_required(role="ANY")
 def list_alamat():
-    user_alamat = Alamat.query.filter_by(user_id=current_user.userID).all()
+    user_alamat = Alamat.query.filter_by(user_id=current_user.id).all()
 
     return render_template('accounts/list_alamat.html',alamats=user_alamat,user=current_user)
 
@@ -205,28 +205,24 @@ def logout():
 
 @blueprint.route('/login-bengkel', methods=['GET', 'POST'])
 def loginBengkel():
-    login_form = LoginFormBengkel(request.form)  # Form login khusus Bengkel
-    if 'login-bengkel' in request.form:  # Trigger saat form login di-submit
+    login_form = LoginFormBengkel(request.form)
+    if 'login-bengkel' in request.form:
 
-        email = request.form['username']  # Ambil input email
-        password = request.form['password']  # Ambil input password
+        username = request.form['username']
+        password = request.form['password']
 
-        # Cari admin bengkel berdasarkan email
-        admin = Bengkel.query.filter_by(email=email).first()
+        admin = Users.query.filter_by(username=username).first()
 
-        # Verifikasi password
         if admin and verify_pass(password, admin.password):
-            login_user(admin)  # Login sebagai admin bengkel
-            return redirect(url_for('bengkel.bengkel'))  # Redirect ke dashboard Bengkel
+            login_user(admin)
+            return redirect(url_for('bengkel_blueprint.dashboard'))
 
-        # Jika login gagal, tampilkan pesan error
         return render_template(
             'accounts/login_bengkel.html', 
             msg="Email atau password salah!", 
             form=login_form
         )
 
-    # Render halaman login jika request adalah GET
     return render_template('accounts/login_bengkel.html', form=login_form)
 
 @blueprint.route('/register-bengkel', methods=['GET', 'POST'])
@@ -298,6 +294,31 @@ def register_bengkel_information():
     return render_template('accounts/create-bengkel-profile.html', form=form, option=option)
 
 
+@blueprint.route('/login-montir', methods=['GET', 'POST'])
+def login_montir():
+    login_form = LoginForm(request.form)
+    if 'login-montir' in request.form:
+
+        username = request.form['username']
+        password = request.form['password']
+
+        user = Users.query.filter_by(username=username).first()
+
+        if user and verify_pass(password, user.password):
+
+            login_user(user)
+            return redirect(url_for('montir_blueprint.beranda_montir'))
+
+        return render_template('accounts/login_montir.html',
+                               msg='Wrong user or password',
+                               form=login_form)
+
+    if not current_user.is_authenticated:
+        return render_template('accounts/login_montir.html',
+                               form=login_form)
+    
+    return render_template('accounts/login_montir.html', form=login_form)
+
 @blueprint.route('/register-montir', methods=['GET', 'POST'])
 def register_montir():
     create_account_form = CreateAccountForm(request.form)
@@ -308,14 +329,14 @@ def register_montir():
         
         user = Users.query.filter_by(username=username).first()
         if user:
-            return render_template('accounts/register.html',
+            return render_template('accounts/register-montir.html',
                                    msg='Username already registered',
                                    success=False,
                                    form=create_account_form)
 
         user = Users.query.filter_by(email=email).first()
         if user:
-            return render_template('accounts/register.html',
+            return render_template('accounts/register-montir.html',
                                    msg='Email already registered',
                                    success=False,
                                    form=create_account_form)
@@ -339,7 +360,7 @@ def register_montir():
         login_user(user)
         return redirect(url_for('authentication_blueprint.register_montir_information'))
 
-    return render_template('accounts/register.html', form=create_account_form)
+    return render_template('accounts/register-montir.html', form=create_account_form)
 
 
 @blueprint.route('/register-montir-information', methods=['GET', 'POST'])
@@ -367,7 +388,7 @@ def register_montir_information():
 
             save_address_to_db(form, user, option['provinsi'])
             print('Alamat Montir Sudah Ditambahkan.')
-            return redirect(url_for('home_blueprint.index'))
+            return redirect(url_for('montir_blueprint.beranda_montir'))
         else:
             update_address_in_db(form, user.alamat, option['provinsi'])
 

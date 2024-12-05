@@ -1,0 +1,164 @@
+{% extends "bengkel/layouts/base.html" %}
+
+{% block title %} Daftar Montir {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div id = row1 class="row">
+                                {% if montirs.count() == 0 %}
+                                <div class="alert alert-warning">Bengkel Anda tidak memiliki montir.</div>
+                                <div>
+                                    <a href="{{ url_for('bengkel_blueprint.tambah_montir') }}" class="btn btn-primary">Tambah Montir</a>
+                                </div>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const row1 = document.getElementById('row1');
+                                        if (row1) {
+                                            row1.style.alignItems = 'baseline';
+                                        }
+                                    });
+                                </script>
+                                
+                                {% else %}
+                                <div>
+                                    <a href="{{ url_for('bengkel_blueprint.tambah_montir') }}" class="btn btn-primary">Tambah Montir</a>
+                                </div>
+                                
+                                <!--[ Table Montir ] start-->
+                                <div class="col-xl-8 col-md-6">
+                                    <div class="card Recent-Users">
+                                        <div class="card-header">
+                                            <h5>Daftar Montir</h5>
+                                        </div>
+                                        <div class="card-block px-0 py-3">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    <tr class="unread">
+                                                        <td><img class="rounded-circle" style="width:40px;"
+                                                                    src="{{ config.ASSETS_ROOT }}/bengkel/images/user/avatar-1.jpg" alt="activity-user">
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="mb-1">Isabella Christensen</h6>
+                                                            <p class="m-0">Lorem Ipsum is simply…</p>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="text-muted"><i
+                                                                    class="fas fa-circle text-c-green f-10 m-r-15"></i>11
+                                                                MAY 12:56</h6>
+                                                        </td>
+                                                        <td><a href="#!"
+                                                                class="label theme-bg2 text-white f-12">Reject</a><a
+                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="unread">
+                                                        <td><img class="rounded-circle" style="width:40px;"
+                                                                    src="{{ config.ASSETS_ROOT }}/bengkel/images/user/avatar-2.jpg" alt="activity-user">
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="mb-1">Mathilde Andersen</h6>
+                                                            <p class="m-0">Lorem Ipsum is simply text of…</p>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="text-muted"><i
+                                                                    class="fas fa-circle text-c-red f-10 m-r-15"></i>11 MAY
+                                                                10:35</h6>
+                                                        </td>
+                                                        <td><a href="#!"
+                                                                class="label theme-bg2 text-white f-12">Reject</a><a
+                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="unread">
+                                                        <td><img class="rounded-circle" style="width:40px;"
+                                                                    src="{{ config.ASSETS_ROOT }}/bengkel/images/user/avatar-3.jpg" alt="activity-user">
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="mb-1">Karla Sorensen</h6>
+                                                            <p class="m-0">Lorem Ipsum is simply…</p>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="text-muted"><i
+                                                                    class="fas fa-circle text-c-green f-10 m-r-15"></i>9 MAY
+                                                                17:38</h6>
+                                                        </td>
+                                                        <td><a href="#!"
+                                                                class="label theme-bg2 text-white f-12">Reject</a><a
+                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="unread">
+                                                        <td><img class="rounded-circle" style="width:40px;"
+                                                                    src="{{ config.ASSETS_ROOT }}/bengkel/images/user/avatar-1.jpg" alt="activity-user">
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="mb-1">Ida Jorgensen</h6>
+                                                            <p class="m-0">Lorem Ipsum is simply text of…</p>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="text-muted f-w-300"><i
+                                                                    class="fas fa-circle text-c-red f-10 m-r-15"></i>19 MAY
+                                                                12:56</h6>
+                                                        </td>
+                                                        <td><a href="#!"
+                                                                class="label theme-bg2 text-white f-12">Reject</a><a
+                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="unread">
+                                                        <td><img class="rounded-circle" style="width:40px;"
+                                                                    src="{{ config.ASSETS_ROOT }}/bengkel/images/user/avatar-2.jpg" alt="activity-user">
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="mb-1">Albert Andersen</h6>
+                                                            <p class="m-0">Lorem Ipsum is simply dummy…</p>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="text-muted"><i
+                                                                    class="fas fa-circle text-c-green f-10 m-r-15"></i>21
+                                                                July 12:56</h6>
+                                                        </td>
+                                                        <td><a href="#!"
+                                                                class="label theme-bg2 text-white f-12">Reject</a><a
+                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- [ Table Montir ] end -->
+                                {% endif %}
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->            
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

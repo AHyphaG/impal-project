@@ -8,7 +8,8 @@ class Bengkel(db.Model):
     user_id_fk = db.Column(db.Integer, db.ForeignKey('users.id'))
     
     # Relasi
-    employee = db.relationship('Montir', backref='owner', lazy=True)
+    employee = db.relationship('Montir', backref='bengkel_owner', lazy=True)  # Ubah nama backref
+    pending = db.relationship('Pending', backref='bengkel_related', lazy=True)
 
     def __repr__(self):
         return f"<Bengkel {self.namaBengkel}>"

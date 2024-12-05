@@ -13,6 +13,9 @@ class Montir(db.Model):
     tempatLahir=db.Column(db.String(15))
     is_available=db.Column(db.String(1))
     user_id_fk = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    #relasi
+    pending = db.relationship('Pending', backref='montir_pending', lazy=True)
     
     # def __repr__(self):
     #     return f"<Bengkel {self.namaBengkel}>"

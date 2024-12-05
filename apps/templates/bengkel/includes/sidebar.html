@@ -1,0 +1,105 @@
+<!-- [ navigation menu BENGKEL] start -->
+
+{% if current_user.role=="Bengkel" %}
+<nav class="pcoded-navbar">
+    <div class="navbar-wrapper">
+        <div class="navbar-brand header-logo">
+            <a href="/" class="b-brand">
+                <div class="b-bg">
+                    <i class="feather icon-trending-up"></i>
+                </div>
+                <span class="b-title">Mokel</span>
+            </a>
+            <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
+        </div>
+        <div class="navbar-content scroll-div">
+            <ul class="nav pcoded-inner-navbar">
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Navigation</label>
+                </li>
+                <li data-username="Index" class="nav-item {% if 'index' in segment %} active {% endif %}">
+                    <a href="{{url_for('bengkel_blueprint.dashboard')}}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-home"></i></span>
+                        <span class="pcoded-mtext">Home</span></a>
+                </li>
+                <li data-username="Login Page" class="nav-item {% if 'ketentuan' in segment %} active {% endif %}">
+                    <a href="" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-list"></i></span>
+                        <span class="pcoded-mtext">Produk</span></a>
+                </li>
+                <li data-username="Montir Page" class="nav-item {% if 'montir' in segment %} active {% endif %}">
+                    <a href="{{ url_for('bengkel_blueprint.montir_page') }}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-user-check"></i></span>
+                        <span class="pcoded-mtext">Montir</span></a>
+                </li>
+                <li data-username="Pakta Page" class="nav-item {% if 'pakta' in segment %} active {% endif %}">
+                    <a href="" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-unlock"></i></span>
+                        <span class="pcoded-mtext">Pakta Integritas</span></a>
+                </li>
+                <li class="nav-item pcoded-menu-caption">
+                    <label></label>
+                </li>
+                <li data-username="Disabled Menu" class="nav-item">
+                    <a href="{{ url_for('authentication_blueprint.logout') }}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-power"></i></span><span
+                            class="pcoded-mtext">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- [ navigation menu BENGKEL] end -->
+{% elif current_user.role == "Montir" %}
+<nav class="pcoded-navbar">
+    <div class="navbar-wrapper">
+        <div class="navbar-brand header-logo">
+            <a href="/" class="b-brand">
+                <div class="b-bg">
+                    <i class="feather icon-trending-up"></i>
+                </div>
+                <span class="b-title">Mokel</span>
+            </a>
+            <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
+        </div>
+        <div class="navbar-content scroll-div">
+            <ul class="nav pcoded-inner-navbar">
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Navigation</label>
+                </li>
+                <li data-username="Index" class="nav-item {% if 'index' in segment %} active {% endif %}">
+                    <a href="{{url_for('montir_blueprint.beranda_montir')}}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-home"></i></span>
+                        <span class="pcoded-mtext">Home</span></a>
+                </li>
+                <li data-username="Login Page" class="nav-item {% if 'ketentuan' in segment %} active {% endif %}">
+                    <a href="" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-list"></i></span>
+                        <span class="pcoded-mtext">Produk</span></a>
+                </li>
+                <li data-username="Montir Page" class="nav-item {% if 'montir' in segment %} active {% endif %}">
+                    <a href="" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-user-check"></i></span>
+                        <span class="pcoded-mtext">Bengkel</span></a>
+                </li>
+                <li data-username="Notifikasi Page" class="nav-item {% if 'pakta' in segment %} active {% endif %}">
+                    <a href="{{url_for('montir_blueprint.berita')}}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-unlock"></i></span>
+                        <span class="pcoded-mtext">Notifikasi</span></a>
+                </li>
+                <li class="nav-item pcoded-menu-caption">
+                    <label></label>
+                </li>
+                <li data-username="Disabled Menu" class="nav-item">
+                    <a href="{{ url_for('authentication_blueprint.logout') }}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-power"></i></span><span
+                            class="pcoded-mtext">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{%endif%}
+

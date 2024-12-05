@@ -1,0 +1,81 @@
+{% extends "bengkel/layouts/base.html" %}
+
+{% block title %} Daftar Montir {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div id = row1 class="row">
+                                {% if tawarans | length == 0 %}
+                                <div class="alert alert-warning">Anda tidak memiliki tawaran saat ini.</div>
+                                {% else %}
+                                <!--[ Table Montir ] start-->
+                                <div class="col-xl-8 col-md-6">
+                                    <div class="card Recent-Users">
+                                        <div class="card-header">
+                                            <h5>Tawaran</h5>
+                                        </div>
+                                        <div class="card-block px-0 py-3">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                        {% for item in tawarans %}
+                                                            <tr class="unread">
+                                                                <!-- <td><img class="rounded-circle" style="width:40px;"
+                                                                            src="{{ config.ASSETS_ROOT }}/bengkel/images/user/avatar-1.jpg" alt="activity-user">
+                                                                </td> -->
+                                                                <td>
+                                                                    <h6 class="mb-1">{{item.bengkel.namaBengkel}}</h6>
+                                                                    <h7 class="mb-1">{{item.gajiIDR}}</h7>
+                                                                    <p class="m-0">{{item.tawaran.jabatan}}</p>
+                                                                </td>
+                                                                <td>
+                                                                    <h6 class="text-muted"><i
+                                                                            class="fas fa-circle text-c-green f-10 m-r-15"></i>
+                                                                            {{item.tawaran.created_at}}
+                                                                        </h6>
+                                                                </td>
+                                                                <td><a href="#!"
+                                                                        class="label theme-bg2 text-white f-12">Tolak</a><a
+                                                                        href="#!" class="label theme-bg text-white f-12">Terima</a>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- [ Table Montir ] end -->
+                                {% endif %}
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->            
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

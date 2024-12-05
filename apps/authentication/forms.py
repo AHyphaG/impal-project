@@ -111,8 +111,8 @@ class EditAlamat(FlaskForm):
     # Tombol submit
     submit = SubmitField('Simpan')
 class LoginFormBengkel(FlaskForm):
-    email = StringField('Email Bengkel',
-                            id='email_login',
+    username = StringField('Username Bengkel',
+                            id='username_login',
                             validators=[DataRequired()])
     password = PasswordField('Password',
                                 id='pwd_login',

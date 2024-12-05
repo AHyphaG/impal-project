@@ -10,6 +10,7 @@ from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 
 from apps.home.forms import ProfileForm
+from apps.authentication.Customer import Customer
 
 
 @blueprint.route('/index')
@@ -57,23 +58,24 @@ def get_segment(request):
         return None
     
 @blueprint.route('/profile', methods=['GET', 'POST'])
-@login_required(role="ANY")
+@login_required(role="Customer")
 def profile():
     user = current_user
+    customer = Customer.query.filter_by(user_id_fk=user.id).first()
     form = ProfileForm()
 
     if form.validate_on_submit():
-        user.namaDepan = form.namaDepan.data
-        user.namaBelakang = form.namaBelakang.data
-        user.sex = form.sex.data
+        customer.namaDepan = form.namaDepan.data
+        customer.namaBelakang = form.namaBelakang.data
+        customer.sex = form.sex.data
         user.email = form.email.data
         user.nomorHp = form.phone.data
         
         db.session.commit()
         return redirect(url_for('home_blueprint.index'))
 
-    form.namaDepan.data = user.namaDepan
-    form.namaBelakang.data = user.namaBelakang
+    form.namaDepan.data = customer.namaDepan
+    form.namaBelakang.data = customer.namaBelakang
     form.email.data = user.email
     form.phone.data = user.nomorHp
 
