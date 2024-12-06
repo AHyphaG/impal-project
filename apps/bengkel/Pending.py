@@ -9,6 +9,7 @@ class Pending(db.Model):
     jabatan = db.Column(db.String(15), nullable = False)
     created_at = db.Column(db.TIMESTAMP, default=db.func.current_timestamp())
     updated_at = db.Column(db.TIMESTAMP, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    deadline = db.Column(db.TIMESTAMP)
 
     # Relasi dengan Bengkel dan Montir
     montir = db.relationship('Montir', backref='pending_montir', lazy=True)

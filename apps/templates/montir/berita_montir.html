@@ -43,16 +43,47 @@
                                                                     <h7 class="mb-1">{{item.gajiIDR}}</h7>
                                                                     <p class="m-0">{{item.tawaran.jabatan}}</p>
                                                                 </td>
-                                                                <td>
-                                                                    <h6 class="text-muted"><i
-                                                                            class="fas fa-circle text-c-green f-10 m-r-15"></i>
-                                                                            {{item.tawaran.created_at}}
-                                                                        </h6>
-                                                                </td>
-                                                                <td><a href="#!"
-                                                                        class="label theme-bg2 text-white f-12">Tolak</a><a
-                                                                        href="#!" class="label theme-bg text-white f-12">Terima</a>
-                                                                </td>
+                                                                
+                                                                {% if item.tawaran.status == 'pending' %}
+                                                                    <td>
+                                                                        <h6 class="text-muted">
+                                                                            <i id= "status-icon-{{item.tawaran.id}}" class="fas fa-circle text-c-green f-10 m-r-15"></i>
+                                                                                <span id="status-text-{{ item.tawaran.id }}">
+                                                                                    Deadline: {{ item.tawaran.deadline.strftime('%d-%m-%Y') }} ({{ item.days_left }} Hari Lagi)
+                                                                                </span>
+                                                                            </h6>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- <a href="javascript:void(0)" class="label theme-bg2 text-white f-12">Tolak</a> -->
+                                                                        <a href="javascript:void(0)" id="tolak-button-{{item.tawaran.id}}" class="label theme-bg2 text-white f-12" onclick="tolakTawaran({{item.tawaran.id}})">Tolak</a>
+                                                                        <a href="javascript:void(0)" id="terima-button-{{item.tawaran.id}}" class="label theme-bg text-white f-12" onclick="terimaTawaran({{item.tawaran.id}},'{{item.tawaran.montir_id_fk}}')">Terima</a>
+                                                                    </td>
+                                                                {% elif item.tawaran.status == 'accepted' %}
+                                                                    <td>
+                                                                        <h6 class="text-muted">
+                                                                            <i class="fas fa-circle text-c-green f-10 m-r-15"></i>
+                                                                                <span id="status-text-{{ item.tawaran.id }}">
+                                                                                    Tawaran diterima pada {{item.tawaran.updated_at.strftime('%d-%m-%Y')}}
+                                                                                </span>
+                                                                            </h6>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="" class="label theme-bg text-white f-12">Tawaran diterima</a>
+                                                                    </td>
+                                                                {% elif item.tawaran.status == 'rejected' %}
+                                                                    <td>
+                                                                        <h6 class="text-muted">
+                                                                            <i class="fas fa-circle text-c-red f-10 m-r-15"></i>
+                                                                                <span id="status-text-{{ item.tawaran.id }}">
+                                                                                    Tawaran ditolak pada {{item.tawaran.updated_at.strftime('%d-%m-%Y')}}
+                                                                                </span>
+                                                                            </h6>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="" class="label theme-bg2 text-white f-12">Tawaran ditolak</a>
+                                                                    </td>
+                                                                {% endif %}
+                                                                
                                                             </tr>
                                                         {% endfor %}
                                                     
@@ -78,4 +109,73 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+    function tolakTawaran(tawaranId) {
+        if (confirm("Apakah Anda yakin ingin menolak tawaran ini?")) {
+            fetch(`/tolak/${tawaranId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    // Perbarui elemen pada halaman
+                    document.getElementById(`terima-button-${tawaranId}`).remove();
+                    document.getElementById(`tolak-button-${tawaranId}`).textContent = 'Tawaran ditolak';
+
+                    // Gunakan updated_at dari respons server
+                    document.getElementById(`status-text-${tawaranId}`).textContent = `Tawaran ditolak pada ${data.updated_at}`;
+
+                    const icon = document.getElementById(`status-icon-${tawaranId}`);
+                    icon.classList.remove('text-c-green');
+                    icon.classList.add('text-c-red');
+                } else {
+                    alert("Gagal menolak tawaran. Silakan coba lagi.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Terjadi kesalahan. Silakan coba lagi.");
+            });
+        }
+    }
+
+    function terimaTawaran(tawaranId,user_id) {
+        if (confirm("Apakah Anda yakin ingin menerima tawaran ini?")) {
+            fetch(`/terima/${tawaranId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    parameter1: user_id
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    // Perbarui elemen pada halaman
+                    document.getElementById(`tolak-button-${tawaranId}`).remove();
+                    document.getElementById(`terima-button-${tawaranId}`).textContent = 'Tawaran diterima';
+
+                    // Gunakan updated_at dari respons server
+                    document.getElementById(`status-text-${tawaranId}`).textContent = `Tawaran diterima pada ${data.updated_at}`;
+
+                } else {
+                    alert("Gagal menerima tawaran. Silakan coba lagi.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Terjadi kesalahan. Silakan coba lagi.");
+            });
+        }
+    }
+</script>
+
+{% endblock javascripts %}

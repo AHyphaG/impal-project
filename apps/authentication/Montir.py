@@ -6,13 +6,16 @@ class Montir(db.Model):
 
     bengkelIdFK = db.Column(db.Integer,  db.ForeignKey('bengkel.bengkelId'),nullable=True)
     montirId = db.Column(db.Integer, primary_key=True)
-    firstName= db.Column(db.String(10))
-    lastName= db.Column(db.String(10))
+    firstname= db.Column(db.String(10))
+    lastname= db.Column(db.String(10))
     sex=db.Column(db.String(1))
     tanggalLahir=db.Column(db.Date)
     tempatLahir=db.Column(db.String(15))
     is_available=db.Column(db.String(1))
     user_id_fk = db.Column(db.Integer, db.ForeignKey('users.id'))
+    jabatan=db.Column(db.String(15))
+    status=db.Column(db.String(15))
+    gaji = db.Column(db.Integer)
 
     #relasi
     pending = db.relationship('Pending', backref='montir_pending', lazy=True)
