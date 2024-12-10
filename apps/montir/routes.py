@@ -6,8 +6,11 @@ from flask_login import (
 from apps import db
 from apps.montir import blueprint
 from apps.authentication.Montir import Montir
+from apps.authentication.models import Users
 from apps.authentication.Bengkel import Bengkel
+from apps.authentication.Alamat import Alamat
 from apps.bengkel.Pending import Pending
+from apps.montir.forms import MontirProfile
 
 from datetime import datetime
 
@@ -15,6 +18,7 @@ from sqlalchemy import case
 
 def format_to_idr(value):
     return f"Rp {value:,.0f}".replace(",", ".")
+
 @blueprint.route('/menu')
 @login_required(role="Montir")
 def beranda_montir():
@@ -53,6 +57,38 @@ def tolak_tawaran(tawaran_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+@blueprint.route('/status-online/<int:user_id>', methods=['POST'])
+@login_required(role="Montir")
+def update_status_online(user_id):
+    try:
+        data = request.get_json()
+        new_status = data.get('status_online')
+
+        montir = Montir.query.filter_by(user_id_fk=user_id).first()
+        if not montir:
+            return jsonify({"error": "Montir not found"}), 404
+
+        montir.is_available = new_status
+        db.session.commit()
+
+        return jsonify({"message": "Status updated successfully", "status_online": montir.is_available}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    
+@blueprint.route('/status-online/<int:user_id>', methods=['GET'])
+@login_required(role="Montir")
+def get_status_online(user_id):
+    try:
+        montir = Montir.query.filter_by(user_id_fk=user_id).first()
+        if not montir:
+            return jsonify({"error": "Montir not found"}), 404
+
+        return jsonify({"status_online": montir.is_available}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @blueprint.route('/terima/<int:tawaran_id>', methods=['POST'])
 @login_required("Montir")
 def terima_tawaran(tawaran_id):
@@ -86,3 +122,31 @@ def terima_tawaran(tawaran_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+    
+@blueprint.route('/profile-montir', methods=['GET', 'POST'])
+@login_required("Montir")
+def profile_montir():
+    form = MontirProfile()
+    
+    user = Users.query.filter_by(id=current_user.id).first()
+    montir = Montir.query.filter_by(user_id_fk=current_user.id).first()
+    alamat = Alamat.query.filter_by(user_id = current_user.id).first()
+
+    if form.validate_on_submit():
+            montir.firstname = form.namaDepan.data
+            montir.lastname = form.namaBelakang.data
+            user.email = form.email.data
+            user.nomorHp = form.phone.data
+            alamat.alamat_lengkap = form.alamat.data
+            
+            db.session.commit()
+            flash("Edit Profil Berhasil","success")
+            return redirect(url_for('montir_blueprint.profile_montir'))
+
+    form.namaDepan.data = montir.firstname
+    form.namaBelakang.data = montir.lastname
+    form.email.data = user.email
+    form.phone.data = user.nomorHp
+    form.alamat.data = alamat.alamat_lengkap
+
+    return render_template("bengkel/layouts/profile.html", form=form,montir=montir,user=current_user)

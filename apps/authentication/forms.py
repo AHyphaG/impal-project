@@ -153,10 +153,10 @@ class CreateBengkelInformation(FlaskForm):
     submit = SubmitField('Submit')
 
 class CreateMontirInformation(FlaskForm):
-    firstName = StringField('First Name',
+    firstname = StringField('First Name',
                             id='firstName_create',
                             validators=[DataRequired()])
-    lastName = StringField('Last Name',
+    lastname = StringField('Last Name',
                             id='lastName_create',
                             validators=[DataRequired()])
     sex = SelectField('Jenis Kelamin', 

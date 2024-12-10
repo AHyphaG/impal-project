@@ -1,0 +1,184 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Pesan Jasa - Montir Keliling {% endblock %} 
+
+{% block stylesheets %}
+<style>
+    .bg-custom {
+        color: white;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<main>
+    {% include 'includes/preloader.html' %}
+    
+    
+    <!-- Section for Pesan Jasa and Add Vehicle -->
+    <section class="min-vh-100 d-flex flex-column justify-content-center section-image overlay-soft-dark" data-background="/static/assets/img/pages/form-image.jpg">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4 bg-custom">Cari Bengkel atau Produk</h2>
+    
+            <!-- Search Bar with Dropdown for Search Type -->
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <!-- Dropdown for search type -->
+                        <select class="form-select" id="searchType" aria-label="Search Type">
+                            <option value="bengkel" selected>Bengkel</option>
+                            <option value="produk">Produk</option>
+                        </select>
+    
+                        <!-- Input for search term -->
+                        <input type="text" class="form-control" id="searchInput" placeholder="Cari Bengkel atau Produk..." aria-label="Search Input">
+    
+                        <!-- Search Button -->
+                        <button class="btn btn-primary" type="button" id="searchButton">Cari</button>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Results Section -->
+            <div id="searchResults" class="mt-4">
+                <!-- Results will be displayed here -->
+            </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center">
+
+                    <!-- Card for Pesan Jasa -->
+                    <div class="signin-inner my-4 my-lg-0 bg-white shadow-soft border rounded border-gray-300 p-4 p-lg-5 w-100 fmxw-500">
+                        <div class="text-center text-md-center mb-4 mt-md-0">
+                            <h1 class="mb-0 h3">
+                                Pesan Jasa Montir
+                            </h1>
+                            <br />
+                            <p>
+                                Pesan layanan montir kami yang siap melayani di tempat Anda.
+                            </p>
+                            <a href="{{ url_for('pemesanan_blueprint.order_montir') }}" class="btn btn-primary">Pesan Sekarang</a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center">
+
+                    <!-- Card for Add Vehicle -->
+                    <div class="signin-inner my-4 my-lg-0 bg-white shadow-soft border rounded border-gray-300 p-4 p-lg-5 w-100 fmxw-500">
+                        <div class="text-center text-md-center mb-4 mt-md-0">
+                            <h1 class="mb-0 h3">
+                                Tambah Kendaraan
+                            </h1>
+                            <br />
+                            <p>
+                                Tambahkan kendaraan Anda untuk memudahkan pemesanan montir.
+                            </p>
+                            <a href="{{ url_for('pemesanan_blueprint.register_kendaraan') }}" class="btn btn-primary">Tambah Kendaraan</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section for Ordered Products -->
+    <section class="container mt-5">
+        <h2 class="text-center">Produk yang Dipesan</h2>
+        <div class="row">
+            <!-- Example of ordered product -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="/static/assets/img/products/sample-product.jpg" class="card-img-top" alt="Produk 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Produk 1</h5>
+                        <p class="card-text">Deskripsi singkat produk yang dipesan.</p>
+                        <p class="card-text"><strong>Harga: Rp 100.000</strong></p>
+                        <a href="#" class="btn btn-success">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example of another ordered product -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="/static/assets/img/products/sample-product2.jpg" class="card-img-top" alt="Produk 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Produk 2</h5>
+                        <p class="card-text">Deskripsi singkat produk yang dipesan.</p>
+                        <p class="card-text"><strong>Harga: Rp 150.000</strong></p>
+                        <a href="#" class="btn btn-success">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add more products as needed -->
+        </div>
+    </section>
+
+</main>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+    // Event listener for the search button
+    document.getElementById('searchButton').addEventListener('click', function() {
+        const searchTerm = document.getElementById('searchInput').value.trim();
+        const searchType = document.getElementById('searchType').value;
+
+        // Validasi input
+        if (searchTerm === "") {
+            alert("Please enter a search term");
+            return;
+        }
+
+        // Fetch search results based on selected type
+        fetch(`/search?type=${searchType}&query=${encodeURIComponent(searchTerm)}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultsContainer = document.getElementById('searchResults');
+                resultsContainer.innerHTML = ""; // Clear previous results
+
+                if (data.results.length === 0) {
+                    resultsContainer.innerHTML = "<p>No results found</p>";
+                    return;
+                }
+
+                // Display search results
+                data.results.forEach(result => {
+                    let resultHTML = "";
+
+                    if (searchType === "bengkel") {
+                        resultHTML = `
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">${result.name}</h5>
+                                    <p class="card-text">Alamat: ${result.address}</p>
+                                    <a href="/bengkel/${result.id}" class="btn btn-success">Lihat Bengkel</a>
+                                </div>
+                            </div>
+                        `;
+                    } else if (searchType === "produk") {
+                        resultHTML = `
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">${result.name}</h5>
+                                    <p class="card-text">Deskripsi: ${result.description}</p>
+                                    <p class="card-text"><strong>Harga: ${result.price}</strong></p>
+                                    <a href="/produk/${result.id}" class="btn btn-success">Lihat Produk</a>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    resultsContainer.innerHTML += resultHTML;
+                });
+            })
+            .catch(err => console.error("Fetch error:", err));
+    });
+</script>
+{% endblock javascripts %}

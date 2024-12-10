@@ -16,7 +16,8 @@ def format_to_idr(value):
 @blueprint.route('/dashboard')
 @login_required(role="Bengkel")
 def dashboard():
-    return render_template('bengkel/dashboard.html')
+    bengkel = Bengkel.query.filter_by(user_id_fk=current_user.id).first()
+    return render_template('bengkel/dashboard.html',bengkel=bengkel)
 
 @blueprint.route('/montir')
 @login_required(role="Bengkel")
@@ -30,7 +31,7 @@ def montir_page():
         }
         for montir in montirs
     ]
-    return render_template('bengkel/montir_page.html', montirs = montir_data, segment = 'montir')
+    return render_template('bengkel/montir_page.html', montirs = montir_data, segment = 'montir',bengkel=bengkel)
 
 @blueprint.route('/tambah-montir', methods = ['GET', 'POST']) 
 @login_required(role="Bengkel")
@@ -54,8 +55,8 @@ def tambah_montir():
             return redirect(url_for('bengkel_blueprint.montir_page'))
         else:
             flash('Montir tidak tersedia untuk direkrut.', 'danger')
-            return render_template('bengkel/tambah_montir.html', form = form)
+            return render_template('bengkel/tambah_montir.html', form = form,bengkel=bengkel)
 
         
     
-    return render_template('bengkel/tambah_montir.html', form = form)
+    return render_template('bengkel/tambah_montir.html', form = form,bengkel=bengkel)

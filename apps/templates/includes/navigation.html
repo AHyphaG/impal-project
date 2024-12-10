@@ -1,25 +1,27 @@
 <header class="header-global">
-    <nav id="navbar-main" aria-label="Primary navigation" class="navbar navbar-main navbar-expand-lg navbar-theme-primary navbar-dark {% if request.path == url_for('home_blueprint.index') %}bg-transparent{% else %}bg-solid{% endif %}">
-        <div class="container">
-            <!-- Logo -->
-            <a class="navbar-brand me-md-3" href="{{ url_for('home_blueprint.index') }}">
-                <img class="navbar-brand-dark logo" src="/static/assets/img/brand/light.svg" alt="Logo light">
-                <img class="navbar-brand-light logo" src="/static/assets/img/brand/dark.svg" alt="Logo dark">
+    <nav id="navbar-main" aria-label="Primary navigation" class="navbar navbar-main navbar-expand-lg navbar-theme-primary headroom navbar-dark">
+        <div class="container position-relative">
+            <a class="navbar-brand me-lg-5" href="./index.html">
+                <img class="navbar-brand-dark" src="/static/assets/img/brand/light.svg" alt="Logo light">
+                <img class="navbar-brand-light" src="/static/assets/img/brand/dark.svg" alt="Logo dark">
             </a>
-
-            <!-- Toggler for mobile view -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-collapse collapse me-auto" id="navbar_global">
+                <div class="navbar-collapse-header">
+                    <div class="row">
+                        <div class="col-6 collapse-brand">
+                            <a href="./index.html">
+                                <img src="/static/assets/img/brand/dark.svg" alt="Themesberg logo">
+                            </a>
+                        </div>
+                        <div class="col-6 collapse-close">
+                            <a href="#navbar_global" class="fas fa-times" data-bs-toggle="collapse" data-bs-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" title="close" aria-label="Toggle navigation"></a>
+                        </div>
+                    </div>
+                </div>
                 <ul class="navbar-nav ms-auto">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('home_blueprint.profile') }}"><i class="far fa-user-circle me-2"></i>Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('pemesanan_blueprint.register_kendaraan') }}"><i class="fas fa-car me-2"></i>Tambah Kendaraan</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('authentication_blueprint.logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
@@ -34,42 +36,11 @@
                     {% endif %}
                 </ul>
             </div>
+            <div class="d-flex align-items-center">
+                <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
         </div>
     </nav>
 </header>
-
-
-
-
-<style>
-/* Custom logo size */
-.navbar-brand .logo {
-    height: 30px;
-    width: auto;
-}
-
-
-.navbar-nav .nav-link {
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-}
-
-
-.navbar-brand,
-.navbar-nav .nav-link {
-    display: flex;
-    align-items: center;
-}
-
-.navbar-toggler {
-    padding: 0.25rem 0.75rem;
-}
-
-.bg-transparent {
-        background-color: rgba(28, 37, 64, 0.2);
-    }
-
-.bg-solid {
-        background-color: rgba(28, 37, 64, 1);
-    }
-</style>

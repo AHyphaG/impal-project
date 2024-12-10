@@ -18,3 +18,34 @@ class ProfileForm(FlaskForm):
                       choices=[('L', 'Male'), ('P', 'Female')], 
                       validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class TambahAlamat(FlaskForm):
+    provinsi = SelectField('Provinsi',
+                           validators=[DataRequired()],
+                           choices=[],
+                           render_kw={'id': 'select2-provinsi', 'class': 'form-control'})
+    
+    kabkot = SelectField('Kabupaten/kota',
+                         validators=[DataRequired()],
+                         choices=[],
+                         render_kw={'id': 'select2-kabupaten', 'class': 'form-control', 'disabled': 'disabled'})
+    
+    kecamatan = SelectField('Kecamatan',
+                            validators=[DataRequired()],
+                            choices=[],
+                            render_kw={'id': 'select2-kecamatan', 'class': 'form-control', 'disabled': 'disabled'})
+    
+    kelurahan = SelectField('Kelurahan',
+                            validators=[DataRequired()],
+                            choices =[],
+                            render_kw={'id': 'select2-kelurahan', 'class': 'form-control', 'disabled': 'disabled'})
+    
+    alamatLengkap = StringField('Alamat Lengkap',
+                                validators=[DataRequired()],
+                                id='alamatlengkap')
+    
+    namaAlamat = StringField('Nama Alamat',
+                             validators=[DataRequired()],
+                             id='namaalamat')
+    
+    submit = SubmitField('Submit')

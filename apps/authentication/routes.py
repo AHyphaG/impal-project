@@ -54,7 +54,7 @@ def login():
         if user and verify_pass(password, user.password):
 
             login_user(user)
-            return redirect(url_for('authentication_blueprint.route_default'))
+            return redirect(url_for('home_blueprint.customer_index'))
 
         # Something (user or pass) is not ok
         return render_template('accounts/login.html',
@@ -64,7 +64,7 @@ def login():
     if not current_user.is_authenticated:
         return render_template('accounts/login.html',
                                form=login_form)#edited
-    return redirect(url_for('home_blueprint.index'))
+    return redirect(url_for('home_blueprint.customer_index'))
 
 
 
@@ -376,8 +376,8 @@ def register_montir_information():
     montir=Montir()
     if form.validate_on_submit() and is_valid:
         if not user.alamat:
-            montir.firstName = form.firstName.data
-            montir.lastName = form.lastName.data
+            montir.firstname = form.firstname.data
+            montir.lastname = form.lastname.data
             montir.sex = form.sex.data
             montir.tanggalLahir = form.tanggalLahir.data
             montir.tempatLahir = form.tempatLahir.data
@@ -386,6 +386,10 @@ def register_montir_information():
             db.session.add(montir)
             db.session.commit()
 
+            alamat = Alamat.query.filter_by(user_id=current_user.id).first()
+            current_user.alamat_active = alamat.alamatID
+            db.session.commit()
+            
             save_address_to_db(form, user, option['provinsi'])
             print('Alamat Montir Sudah Ditambahkan.')
             return redirect(url_for('montir_blueprint.beranda_montir'))

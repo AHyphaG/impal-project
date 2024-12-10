@@ -8,8 +8,10 @@ class Orders(db.Model):
     orderDate = db.Column(db.DateTime, nullable=False)
     totalPrice = db.Column(db.Integer, nullable=True)
     lokasi = db.Column(db.String(50), nullable=False)
-    userIdFK = db.Column(db.Integer, db.ForeignKey('users.userID'), nullable=False)
+    userIdFK = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     montirIdFK = db.Column(db.Integer, db.ForeignKey('montir.montirId'), nullable=False)
+    kendaraan = db.Column(db.Integer)
+    keluhan = db.Column(db.String(50))
 
     product_details = db.relationship('ProductDetails', backref='order', lazy=True)
 

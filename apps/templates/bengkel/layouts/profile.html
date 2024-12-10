@@ -1,0 +1,172 @@
+{% extends "bengkel/layouts/base.html" %}
+
+{% block title %} Profile {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Informasi Profil <span>(Montir ID: {{montir.montirId}})</span></h5>
+                                        </div>
+                                        <form method="POST" class="border p-4 shadow-sm rounded">
+                                            {{ form.hidden_tag() }}
+                                            <div class="card-block">
+                                                <div class="row">
+                                                    <div class="col-sm-12 mb-4">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Alamat Email</label>
+                                                            <!-- <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"> -->
+                                                            {{ form.email(class="form-control frozen", id="email_create", placeholder="Email") }}
+                                                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-4">
+                                                        <div class="form-group">
+                                                            <label for="fn">Nama Depan</label>
+                                                            <!-- <input type="email" class="form-control" id="fn" aria-describedby="emailHelp" placeholder="Enter email"> -->
+                                                            {{ form.namaDepan(class="form-control frozen", id="nama_depan_create", placeholder="Nama depan") }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-4">
+                                                        <div class="form-group">
+                                                            <label for="ln">Nama Belakang</label>
+                                                            <!-- <input type="email" class="form-control" id="ln" aria-describedby="emailHelp" placeholder="Enter email"> -->
+                                                            {{ form.namaBelakang(class="form-control frozen", id="nama_belakang_create", placeholder="Nama belakang") }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 mb-4">
+                                                        <div class="form-group">
+                                                            <label for="add">Nomor Telepon</label>
+                                                            {{ form.phone(class="form-control frozen", id="no_telepon_create", placeholder="Nomor Telepon") }}
+                                                            <small id="addd" class="form-text text-muted">Ini nomor telepon anda yang terdaftar</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 mb-4">
+                                                        <div class="form-group">
+                                                            <label for="add">Alamat</label>
+                                                            <!-- <input type="email" class="form-control" id="add" aria-describedby="emailHelp" placeholder="Enter email"> -->
+                                                            {{form.alamat(class = "form-control frozen", id="alamat_create", placeholder="Alamat anda")}}
+                                                            <small id="addd" class="form-text text-muted">This is your shipments address</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="edit-button" class="button-save-changes">
+                                                    <button type="button" class="btn btn-primary" onclick="enableEditing()">Edit</button>
+                                                </div>
+                                                <div id="action-buttons" style="display: none;">
+                                                    {{ form.submit(class="btn btn-primary") }}
+                                                    <button type="button" class="btn btn-secondary" onclick="cancelEditing()">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="card">
+                                        <div class="card-block">
+                                            <div class="d-flex align-items-center justify-content-center flex-column">
+                                                <div class="w-50 p-3">
+                                                    <img src="https://via.placeholder.com/500" alt="profile image"
+                                                        class="img-fluid rounded-circle">
+                                                </div>
+                                                <div class="text-center">
+                                                    <h4 class="font-weight-bold h6">Author Name</h4>
+                                                    <p class="font-italic text-muted">Lorem ipsum dolor.</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="small font-weight-light mt-4 text-center text-muted">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos
+                                                    esse excepturi fugiat id numquam? Enim illo, perferendis. Eum, ratione,
+                                                    voluptas?</p>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <a href="#" class="h6 text-muted d-block m-1"><i
+                                                        class="icon feather icon-facebook"></i></a>
+                                                <a href="#" class="h6 text-muted d-block m-1"><i
+                                                        class="icon feather icon-twitter"></i></a>
+                                                <a href="#" class="h6 text-muted d-block m-1"><i
+                                                        class="icon feather icon-instagram"></i></a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+    function enableEditing() {
+        document.getElementById('edit-button').style.display = 'none';
+        const actionButtons = document.getElementById('action-buttons');
+        actionButtons.style.display = 'flex';
+        actionButtons.style.justifyContent = 'center';
+        actionButtons.style.padding = '20px';
+    
+        actionButtons.classList.add('button-save-change');
+    
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.classList.remove('frozen');
+            input.removeAttribute('readonly');
+            input.removeAttribute('disabled');
+        });
+    }
+    
+    
+    function cancelEditing() {
+        document.getElementById('action-buttons').style.display = 'none';
+        const editButtons = document.getElementById('edit-button');
+        editButtons.style.display = 'flex';
+    
+        editButtons.classList.add('button-save-change');
+    
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (input.value) {
+                input.classList.add('frozen');
+                input.setAttribute('readonly', true);
+                input.setAttribute('disabled', true);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const inputs = document.querySelectorAll('input, select');
+
+        inputs.forEach(input => {
+            if (input.value) {
+                input.classList.add('frozen');
+                input.setAttribute('readonly', true);
+                input.setAttribute('disabled', true);
+            }
+        });
+    });
+</script>
+{% endblock javascripts %}

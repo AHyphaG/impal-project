@@ -5,20 +5,33 @@ Copyright (c) 2019 - present AppSeed.us
 
 from apps import db,login_manager
 from apps.home import blueprint
-from flask import render_template, redirect, request, url_for
+from flask import render_template, redirect, request, url_for, jsonify, flash
 from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 
-from apps.home.forms import ProfileForm
+from apps.authentication.Alamat import Alamat
+from apps.authentication.Bengkel import Bengkel
+from apps.pemesanan.models import Product
+
+from apps.home.forms import ProfileForm, TambahAlamat
 from apps.authentication.Customer import Customer
 
+from apps.authentication.util import *
 
 @blueprint.route('/index')
-@login_required(role="ANY")
+@login_required(role="Customer")
 def index():
+    redirect(url_for('home_blueprint.customer_index'))
 
-    return render_template('home/index.html', segment='index')
 
+
+
+@blueprint.route('/customer')
+@login_required(role="Customer")
+def customer_index():
+    customer = Customer.query.filter_by(user_id_fk=current_user.id)
+
+    return render_template('home/customer.html',customer=customer)
 
 @blueprint.route('/<template>')
 @login_required(role="ANY")
@@ -80,6 +93,64 @@ def profile():
     form.phone.data = user.nomorHp
 
     return render_template('accounts/profile.html', form=form, user=user)
+
+
+@blueprint.route('/search', methods=['GET'])
+@login_required(role="Customer")
+def search():
+    search_type = request.args.get('type')
+    query = request.args.get('query')
+
+    if search_type == 'bengkel':
+        results = Bengkel.query.filter(Bengkel.namaBengkel.ilike(f"%{query}%")).all()
+    elif search_type == 'produk':
+        results = Product.query.filter(Product.name.ilike(f"%{query}%")).all()
+    else:
+        return jsonify({"error": "Invalid search type"}), 400
+
+    # Format response data
+    response_data = []
+    for result in results:
+        if search_type == 'bengkel':
+            response_data.append({
+                "id": result.bengkelId,
+                "name": result.namaBengkel
+            })
+        elif search_type == 'produk':
+            response_data.append({
+                "id": result.id,
+                "name": result.name,
+                "description": result.description,
+                "price": result.price
+            })
+
+    return jsonify({"results": response_data})
+
+
+@blueprint.route('/tambah_alamat', methods=['GET', 'POST'])
+@login_required(role="Customer")
+def tambah_alamat():
+    form =TambahAlamat(request.form)
+    user = current_user
+    
+    option, is_valid, form = cekFormAlamat(form)
+
+    customer = Customer.query.filter_by(user_id_fk=user.id).first()
+
+    if form.validate_on_submit() and is_valid:
+        save_address_to_db(form,user,option['provinsi'])
+        print('Data alamat berhasil disimpan ke database.\n')
+        return redirect(url_for('home_blueprint.customer_index'))
+    return render_template('accounts/edit_alamat.html',form=form)
+
+@blueprint.route('/pilih-alamat/<int:alamatIDTerpilih>', methods=['GET', 'POST'])
+@login_required(role="Customer")
+def pilih_alamat(alamatIDTerpilih):
+    user = current_user
+    user.alamat_active = alamatIDTerpilih
+    db.session.commit()
+    flash("Alamat berhasil dipilih")
+    return redirect(url_for('authentication_blueprint.list_alamat'))
 
 @login_manager.unauthorized_handler
 def unauthorized_handler():

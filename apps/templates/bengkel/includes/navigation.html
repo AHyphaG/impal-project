@@ -39,8 +39,15 @@
                         <ul class="pro-body">
                             <li><a href="/profile.html" class="dropdown-item"><i class="feather icon-settings"></i>
                                     Settings</a></li>
-                            <li><a href="/profile.html" class="dropdown-item"><i class="feather icon-user"></i>
-                                    Profile</a></li>
+                            {%if current_user.role == "Montir" %}
+                                <li><a href="{{url_for('montir_blueprint.profile_montir')}}" class="dropdown-item"><i class="feather icon-user"></i>
+                                    Profile</a>
+                                </li>
+                            {% elif current_user.role == "Bengkel" %}
+                                <<li><a href="/profile.html" class="dropdown-item"><i class="feather icon-user"></i>
+                                    Profile</a>
+                                </li>
+                            {% endif %}
                             <li><a href="../home/changePass.html" class="dropdown-item"><i class="feather icon-alert-octagon"></i>
                                     Change Password</a></li>
                             <li><a href="{{ url_for('authentication_blueprint.logout') }}" class="dropdown-item">

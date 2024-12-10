@@ -41,6 +41,9 @@
         <div class="card shadow-sm">
             <div class="card-header bg-dark text-white">
                 <h5 class="mb-0">Alamat {{ user.namaBelakang }}</</h5>
+                <a href="{{url_for('home_blueprint.tambah_alamat')}}" class="btn btn-sm btn-primary">
+                    +
+                </a>
             </div>
             <div class="card-body">
                 {% if alamats %}
@@ -67,6 +70,12 @@
                                     <a href="{{ url_for('authentication_blueprint.edit_alamat', alamatIDTerpilih=alamat.alamatID) }}" class="btn btn-sm btn-primary">
                                         Edit
                                     </a>
+                                    {%if current_user.alamat_active != alamat.alamatID%}
+                                        <a href="{{ url_for('home_blueprint.pilih_alamat', alamatIDTerpilih=alamat.alamatID) }}" class="btn btn-sm btn-primary">
+                                            Pilih
+                                        </a>
+                                    {%endif%}
+                                    
                                 </td>
                         
                             </tr>

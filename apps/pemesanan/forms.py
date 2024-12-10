@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField,SelectField
 from wtforms.validators import DataRequired
 
 class RegisterKendaraanForm(FlaskForm):
@@ -9,3 +9,11 @@ class RegisterKendaraanForm(FlaskForm):
     tahun = StringField('Tahun Keluaran', validators=[DataRequired()])
     noPlat = StringField('No Plat', validators=[DataRequired()])
     submit = SubmitField('Daftarkan Kendaraan')
+
+class PesanJasaForm(FlaskForm):
+    vehicleId = SelectField('Pilih Kendaraan',
+                             choices=[],
+                             validators=[DataRequired()])
+    keluhan = StringField('Keluhan',
+                          validators=[DataRequired()])
+    submit = SubmitField('Submit')

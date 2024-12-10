@@ -61,11 +61,33 @@
                                                                 </td>
                                                                 <td>
                                                                     <h6 class="text-muted">
-                                                                        <i class="fas fa-circle text-c-green f-10 m-r-15"></i>
+                                                                        {%if item.montir.is_available%}
+                                                                            <i class="fas fa-circle text-c-green f-10 m-r-15"></i>
                                                                             <span id="status-text-{{ item.montir.montirId }}">
-                                                                                Status: {{item.montir.status}}
+                                                                                Status: Online
                                                                             </span>
-                                                                        </h6>
+                                                                        {%else%}
+                                                                            <i class="fas fa-circle text-c-red f-10 m-r-15"></i>
+                                                                            <span id="status-text-{{ item.montir.montirId }}">
+                                                                                Status: Offline
+                                                                            </span>
+                                                                        {%endif%}
+                                                                    </h6>
+                                                                </td>
+                                                                <td>
+                                                                    <h6 class="text-muted">
+                                                                        {%if item.montir.is_available%}
+                                                                            <i class="fas fa-circle text-c-green f-10 m-r-15"></i>
+                                                                            <span id="status-text-{{ item.montir.montirId }}">
+                                                                                Status: Online
+                                                                            </span>
+                                                                        {%else%}
+                                                                            <i class="fas fa-circle text-c-red f-10 m-r-15"></i>
+                                                                            <span id="status-text-{{ item.montir.montirId }}">
+                                                                                Status: Offline
+                                                                            </span>
+                                                                        {%endif%}
+                                                                    </h6>
                                                                 </td>
                                                                 <td>
                                                                     <a href="#!" class="label theme-bg2 text-white f-12">Pecat</a>
