@@ -38,9 +38,12 @@ def montir_page():
 def tambah_montir():
     form = TambahMontirForm()
 
+    
+    bengkel = Bengkel.query.filter_by(user_id_fk=current_user.id).first()
+    print("BENGKEL POER: ",bengkel)
     if form.validate_on_submit():
         montir = Montir.query.filter_by(montirId=form.idMontir.data).first()
-        bengkel = Bengkel.query.filter_by(user_id_fk=current_user.id).first()
+        
         if montir and not montir.bengkelIdFK:
             pending = Pending(
                 montir_id_fk = montir.montirId,
