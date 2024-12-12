@@ -385,7 +385,7 @@ def register_montir_information():
             montir.user_id_fk=user.id
             db.session.add(montir)
             db.session.commit()
-
+            save_address_to_db(form,user,option['provinsi'])
             alamat = Alamat.query.filter_by(user_id=current_user.id).first()
             current_user.alamat_active = alamat.alamatID
             db.session.commit()
