@@ -1,131 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Profil</title>
-        
-        {% extends "layouts/base-fullscreen.html" %}
-        
-        {% block title %} Profil {% endblock %}
-        
-        {% block stylesheets %}
-            <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
-        {% endblock stylesheets %}
-        
-        {% include 'includes/navigation.html' %}
-    </head>
-    
-    <body>
-        {% block content %}
-        <main class="container mt-5 pt-6 mb-5">
-        
-            {% include 'includes/preloader.html' %}
-        
-            <div class="container">
-                <div class="container-content">
-                    <h2>Profil</h2>
-                    <form method="POST" class="border p-4 shadow-sm rounded">
-                        {{ form.hidden_tag() }}
-                        <div class="pp">
-                            <div class="img-profile">
-                                <img src="static/assets/img/zeusProfile.jpg" class="profileImg" alt="Profile Picture">
+
+<head>
+    <title>Profil</title>
+
+    {% extends "layouts/base-fullscreen.html" %}
+
+    {% block title %} Profil {% endblock %}
+
+    {% block stylesheets %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    {% endblock stylesheets %}
+
+    {% include 'includes/navigation.html' %}
+</head>
+
+<body>
+    {% block content %}
+    <main class="container mt-5 pt-6 mb-5">
+
+        {% include 'includes/preloader.html' %}
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12">
+                <div class="card shadow-sm rounded">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Profil</h2>
+                        <form method="POST">
+                            {{ form.hidden_tag() }}
+
+                            <div class="text-center mb-4">
+                                <div class="img-profile mb-3">
+                                    <img src="static/assets/img/zeusProfile.jpg" class="profileImg" alt="Profile Picture">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="usernames-group">
-                                <div class="f-name">
+
+                            <div class="form-group row mb-3">
+                                <div class="col-12 col-md-6 mb-3 mb-md-0">
                                     <label for="nama_depan_create">Nama depan</label>
                                     {{ form.namaDepan(class="form-control frozen", id="nama_depan_create", placeholder="Nama depan") }}
                                 </div>
-                                <div class="l-name">
+                                <div class="col-12 col-md-6">
                                     <label for="nama_belakang_create">Nama belakang</label>
                                     {{ form.namaBelakang(class="form-control frozen", id="nama_belakang_create", placeholder="Nama belakang") }}
                                 </div>
                             </div>
 
-                            <label for="jenis_kelamin_create">Jenis Kelamin</label>
-                            {{ form.sex(class="form-control frozen", id="jenis_kelamin_create") }}
+                            <div class="form-group mb-3">
+                                <label for="jenis_kelamin_create">Jenis Kelamin</label>
+                                {{ form.sex(class="form-control frozen", id="jenis_kelamin_create") }}
+                            </div>
 
-                            <label for="email">Email</label>
-                            {{ form.email(class="form-control frozen", id="email", placeholder="Email") }}
+                            <div class="form-group mb-3">
+                                <label for="email">Email</label>
+                                {{ form.email(class="form-control frozen", id="email", placeholder="Email") }}
+                            </div>
 
-                            <label for="phone">Nomor Telepon</label>
-                            {{ form.phone(class="form-control frozen", id="phone", placeholder="Nomor telepon") }}
+                            <div class="form-group mb-3">
+                                <label for="phone">Nomor Telepon</label>
+                                {{ form.phone(class="form-control frozen", id="phone", placeholder="Nomor telepon") }}
+                            </div>
+
+                            <div class="d-flex justify-content-center mb-4" id="edit-button">
+                                <button type="button" class="btn btn-primary" onclick="enableEditing()">Edit</button>
+                            </div>
+
+                            <div id="action-buttons" class="d-flex justify-content-center" style="display: none;">
+                                {{ form.submit(class="btn btn-primary me-2") }}
+                                <button type="button" class="btn btn-secondary" onclick="cancelEditing()">Cancel</button>
+                            </div>
+                        </form>
+
+                        <div id="info-buttons" class="d-flex justify-content-center mt-4">
+                            <a href="{{ url_for('authentication_blueprint.vehicles') }}" class="btn btn-secondary me-2">Kendaraan</a>
+                            <a href="{{ url_for('authentication_blueprint.list_alamat') }}" class="btn btn-secondary">Alamat</a>
                         </div>
-                        <div id="edit-button" class="button-save-changes">
-                            <button type="button" class="btn btn-primary" onclick="enableEditing()">Edit</button>
-                        </div>
-                        <div id="action-buttons" style="display: none;">
-                            {{ form.submit(class="btn btn-primary") }}
-                            <button type="button" class="btn btn-secondary" onclick="cancelEditing()">Cancel</button>
-                        </div>
-                    </form>
-                    <div id="info-buttons" class="button-save-changes">
-                        <a href="{{ url_for('authentication_blueprint.vehicles') }}" class="btn btn-secondary">Kendaraan</a>
-                        <a href="{{ url_for('authentication_blueprint.list_alamat') }}" class="btn btn-secondary">Alamat</a>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
 
-        <style>
-            .form-group {
-                padding-top: 20px;
-            }
-            .button-save-changes {
-                display: flex;
-                justify-content: center;
-                padding: 20px;
-            }
-            .l-name, .f-name {
-                display: flex;
-                flex-direction: column;
-            }
-            .usernames-group {
-                align-items: center;
-                display: flex;
-                flex-direction: row;
-            }
-            .container-content {
-                justify-content: center;
-                align-items: center;
-                display: flex;
-                flex-direction: column;
-                height: 95vh;
-            }
+    </main>
+
+    <style>
+        .profileImg {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid black;
+        }
+
+        .frozen {
+            background-color: #f0f0f0;
+            color: #6c757d;
+            border: 1px solid #ced4da;
+            pointer-events: none;
+        }
+
+        .btn {
+            border-radius: 10px;
+        }
+
+        @media (max-width: 767px) {
             .profileImg {
-                width: 75px; 
-                height: 75px; 
-                border-radius: 50%; 
-                object-fit: cover; 
-                border: 2px solid black; 
+                width: 100px;
+                height: 100px;
             }
-            .pp {
-                flex-direction: column;
-                display: flex;
-                align-items: center;
-            }
-            .btn {
-                margin-left: 5px;
-                margin-right: 5px;
-                border-radius: 10px;
-            }
-            .frozen {
-                background-color: #f0f0f0;
-                color: #6c757d;
-                border: 1px solid #ced4da;
-                pointer-events: none;
-            }
-        </style>
-        <script>
+        }
+    </style>
 
+    <script>
         function enableEditing() {
             document.getElementById('edit-button').style.display = 'none';
             const actionButtons = document.getElementById('action-buttons');
             actionButtons.style.display = 'flex';
-            actionButtons.style.justifyContent = 'center';
-            actionButtons.style.padding = '20px';
-
-            actionButtons.classList.add('button-save-change');
 
             const inputs = document.querySelectorAll('input, select');
             inputs.forEach(input => {
@@ -135,15 +124,10 @@
             });
         }
 
-
         function cancelEditing() {
             document.getElementById('action-buttons').style.display = 'none';
             const editButtons = document.getElementById('edit-button');
             editButtons.style.display = 'flex';
-            editButtons.style.justifyContent = 'center';
-            editButtons.style.padding = '20px';
-
-            editButtons.classList.add('button-save-change');
 
             const inputs = document.querySelectorAll('input, select');
             inputs.forEach(input => {
@@ -157,7 +141,6 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const inputs = document.querySelectorAll('input, select');
-
             inputs.forEach(input => {
                 if (input.value) {
                     input.classList.add('frozen');
@@ -166,13 +149,14 @@
                 }
             });
         });
+    </script>
 
-        </script>
-        {% include 'includes/footer.html' %}
-        {% endblock content %}
-        
-        {% block javascripts %}
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
-        {% endblock javascripts %}
-    </body>
+    {% include 'includes/footer.html' %}
+    {% endblock content %}
+
+    {% block javascripts %}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+    {% endblock javascripts %}
+</body>
+
 </html>
