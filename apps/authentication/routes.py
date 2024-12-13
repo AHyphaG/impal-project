@@ -30,7 +30,7 @@ from apps.authentication.util import *
 @blueprint.route('/')
 def route_default():
     # return redirect(url_for('authentication_blueprint.login'))
-    return redirect(url_for('home_blueprint.customer_index'))
+    return redirect(url_for('authentication_blueprint.index'))
 
 @blueprint.route('/index')
 def index():

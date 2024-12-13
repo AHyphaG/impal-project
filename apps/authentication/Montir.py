@@ -8,7 +8,7 @@ class Montir(db.Model):
     montirId = db.Column(db.Integer, primary_key=True)
     firstname= db.Column(db.String(10))
     lastname= db.Column(db.String(10))
-    sex=db.Column(db.String(1))
+    sex=db.Column(db.String(6))
     tanggalLahir=db.Column(db.Date)
     tempatLahir=db.Column(db.String(15))
     is_available=db.Column(db.String(1))
