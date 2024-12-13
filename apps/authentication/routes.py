@@ -30,7 +30,7 @@ from apps.authentication.util import *
 @blueprint.route('/')
 def route_default():
     # return redirect(url_for('authentication_blueprint.login'))
-    return redirect(url_for('home_blueprint.index'))
+    return redirect(url_for('home_blueprint.customer_index'))
 
 @blueprint.route('/index')
 def index():
@@ -132,7 +132,7 @@ def register_information():
 
         save_address_to_db(form,user,option['provinsi'])
         print('Data alamat berhasil disimpan ke database.\n')
-        return redirect(url_for('home_blueprint.index'))
+        return redirect(url_for('home_blueprint.customer_index'))
     return render_template('accounts/create-profile.html',form=form)
 
 @blueprint.route('/vehicles')
@@ -194,7 +194,7 @@ def edit_alamat(alamatIDTerpilih):
         db.session.commit()
         print('Data alamat berhasil disimpan ke database.\n')
         print(f"Provinsi: {provinsi_name}, Kab/Kota: {kabkot_name}, Kecamatan: {kecamatan_name}, Kelurahan: {kelurahan_name}")
-        return redirect(url_for('home_blueprint.index'))
+        return redirect(url_for('home_blueprint.customer_index'))
     return render_template('accounts/edit_alamat.html',form=form,alamatIDTerpilih=alamat.alamatID)
 
 @blueprint.route('/logout')
@@ -284,7 +284,7 @@ def register_bengkel_information():
 
             save_address_to_db(form, user, option['provinsi'])
             print('Alamat Bengkel Sudah Ditambahkan.')
-            return redirect(url_for('home_blueprint.index'))
+            return redirect(url_for('home_blueprint.customer_index'))
         else:
             update_address_in_db(form, user.alamat, option['provinsi'])
 
