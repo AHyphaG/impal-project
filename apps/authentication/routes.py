@@ -194,7 +194,12 @@ def edit_alamat(alamatIDTerpilih):
         db.session.commit()
         print('Data alamat berhasil disimpan ke database.\n')
         print(f"Provinsi: {provinsi_name}, Kab/Kota: {kabkot_name}, Kecamatan: {kecamatan_name}, Kelurahan: {kelurahan_name}")
-        return redirect(url_for('home_blueprint.customer_index'))
+        if current_user.role == "Bengkel":
+            return redirect(url_for('bengke_blueprint.dashboard'))
+        elif current_user.role == "Customer":
+            return redirect(url_for('home_blueprint.customer_index'))
+        elif current_user.role == "Montir":
+            return redirect(url_for('montir_blueprint.beranda_montir'))
     return render_template('accounts/edit_alamat.html',form=form,alamatIDTerpilih=alamat.alamatID)
 
 @blueprint.route('/logout')
@@ -284,7 +289,7 @@ def register_bengkel_information():
 
             save_address_to_db(form, user, option['provinsi'])
             print('Alamat Bengkel Sudah Ditambahkan.')
-            return redirect(url_for('home_blueprint.customer_index'))
+            return redirect(url_for('bengkel_blueprint.dashboard'))
         else:
             update_address_in_db(form, user.alamat, option['provinsi'])
 

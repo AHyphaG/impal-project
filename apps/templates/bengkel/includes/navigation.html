@@ -2,7 +2,11 @@
 <header class="navbar pcoded-header navbar-expand-lg navbar-light">
     <div class="m-header">
         <a class="mobile-menu" id="mobile-collapse1" href="javascript:"><span></span></a>
-        <a href="/" class="b-brand">
+        {%if current_user.role == "Montir" %}
+            <a href="{{url_for('montir_blueprint.beranda_montir')}}" class="b-brand">
+        {% elif current_user.role == "Bengkel" %}
+            <a href="{{url_for('bengkel_blueprint.dashboard')}}" class="b-brand">
+        {% endif %}
             <div class="b-bg">
                 <i class="feather icon-trending-up"></i>
             </div>
