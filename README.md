@@ -99,6 +99,14 @@ At this point, the app runs at `http://127.0.0.1:5000/`.
 
 <br />
 
+> Start the celery
+
+```bash
+$ celery -A celery_worker.celery worker --loglevel=info
+```
+
+<br />
+
 ### 👉 Create Users
 
 By default, the app redirects guest users to authenticate. In order to access the private pages, follow this set up: 

@@ -13,6 +13,7 @@ class RegisterKendaraanForm(FlaskForm):
 class PesanJasaForm(FlaskForm):
     vehicleId = SelectField('Pilih Kendaraan',
                              choices=[],
+                             coerce=int,
                              validators=[DataRequired()])
     keluhan = StringField('Keluhan',
                           validators=[DataRequired()])

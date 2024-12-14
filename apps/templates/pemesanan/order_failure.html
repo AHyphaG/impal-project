@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Pesan Jasa - Montir Keliling {% endblock %} 
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+    {% block content %}
+    <section class="min-vh-100 d-flex flex-column justify-content-center section-image overlay-soft-dark" data-background="/static/assets/img/pages/form-image.jpg">
+      <div class="container mx-sm-2 rounded" style="background-color: white;">
+          <h1>Pesanan Anda Telah Berhasil!</h1>
+
+          <div class="order-details">
+            <h1>Pesanan Gagal</h1>
+            <p>{{ message }}</p>
+            <a href="{{ url_for('pemesanan.blueprint.order_montir') }}">Kembali ke halaman pemesanan</a>
+          </div>
+      </div>
+    </section>
+
+{% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %}
+

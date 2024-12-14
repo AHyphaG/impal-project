@@ -1,7 +1,7 @@
 <header class="header-global">
     <nav id="navbar-main" aria-label="Primary navigation" class="navbar navbar-main navbar-expand-lg navbar-theme-primary headroom navbar-dark {% if nav_background %}bg-dark{% else %}bg-opacity-20{% endif %}">
         <div class="container position-relative">
-            <a class="navbar-brand me-lg-5" href="./index.html">
+            <a class="navbar-brand me-lg-5" href="{{ url_for('home_blueprint.customer_index') }}">
                 <img class="navbar-brand-dark" src="/static/assets/img/brand/light.svg" alt="Logo light">
                 <img class="navbar-brand-light" src="/static/assets/img/brand/dark.svg" alt="Logo dark">
             </a>
@@ -9,7 +9,7 @@
                 <div class="navbar-collapse-header">
                     <div class="row">
                         <div class="col-6 collapse-brand">
-                            <a href="./index.html">
+                            <a href="{{ url_for('home_blueprint.customer_index') }}">
                                 <img src="/static/assets/img/brand/dark.svg" alt="Themesberg logo">
                             </a>
                         </div>

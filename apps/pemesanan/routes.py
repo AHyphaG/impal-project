@@ -3,11 +3,10 @@ from flask_login import login_required, current_user
 
 from apps import db
 from apps.pemesanan import blueprint
+from apps.pemesanan.tasks import create_order_task
 from apps.authentication.Vehicles import Vehicles
-from apps.pemesanan.models import Orders
-from apps.authentication.models import Users
-from apps.authentication.Montir import Montir
 from apps.authentication.Alamat import Alamat
+from time import sleep
 
 from apps.pemesanan.forms import RegisterKendaraanForm, PesanJasaForm
 
@@ -27,11 +26,9 @@ def order_montir():
     form.vehicleId.choices = [(vehicle.vehicleID, vehicle.tipe) for vehicle in vehicles]
 
     if request.method == 'POST' and form.validate_on_submit():
-        selected_vehicle = form.vehicleId.data
+        selected_vehicle = int(form.vehicleId.data) 
+        print("pukimak: ",selected_vehicle)
         keluhan = form.keluhan.data
-
-        # Cari montir yang tersedia
-        available_montirs = Montir.query.filter_by(is_available=True).all()
 
         # Ambil alamat aktif user
         user_alamat = Alamat.query.filter_by(alamatID=current_user.alamat_active).first()
@@ -40,37 +37,46 @@ def order_montir():
             flash("Alamat aktif tidak ditemukan.")
             return redirect(url_for('home_blueprint.profile'))
 
-        # Filter montir berdasarkan kecamatan yang sama dengan alamat user
-        suitable_montirs = []
-        for montir in available_montirs:
-            montir_cek = Users.query.filter_by(id=montir.user_id_fk).first()
-            alamat_search = Alamat.query.filter_by(alamatID=montir_cek.alamat_active).first()
-            if alamat_search.kabkot == user_alamat.kabkot:
-                suitable_montirs.append(montir)
+        # Panggil task Celery untuk membuat pesanan
+        task = create_order_task.apply_async(
+            args=[current_user.id, selected_vehicle, keluhan, user_alamat.alamatID]
+        )
 
-        if suitable_montirs:
-            # Ambil montir pertama yang tersedia
-            selected_montir = suitable_montirs[0]
-            
-            # Buat pesanan baru
-            new_order = Orders(
-                orderDate = datetime.now(),
-                userIdFK=current_user.id,
-                montirIdFK=selected_montir.montirId,
-                kendaraan=selected_vehicle,
-                keluhan=keluhan,
-                lokasi = user_alamat.alamat_lengkap
-            )
-            db.session.add(new_order)
-            db.session.commit()
-
-            flash("Pesanan berhasil dibuat, montir sedang dalam perjalanan!")
-            return redirect(url_for('order_success'))
-
-        else:
-            flash("Tidak ada montir yang tersedia di kecamatan Anda.")
+        # Menampilkan status antrian task
+        flash("Pesanan sedang diproses, harap tunggu beberapa saat.")
+        return redirect(url_for('pemesanan_blueprint.order_status', task_id=task.id))
 
     return render_template('pemesanan/order_montir.html', vehicles=vehicles, form=form)
+
+
+@blueprint.route('/order-status/<task_id>', methods=['GET'])
+@login_required(role="Customer")
+def order_status(task_id):
+    task = create_order_task.AsyncResult(task_id)
+
+    # Jika task belum selesai
+    if task.state == 'PENDING' or task.state == 'STARTED':
+        return render_template('pemesanan/order_matchmaking.html')
+
+    # Jika task sudah selesai
+    if task.state == 'SUCCESS':
+        result = task.result
+
+        montir = result.get('montir')
+        kendaraan = result.get('kendaraan')
+        message = result.get('message')
+        bengkel = result.get('bengkel')
+
+        return render_template(
+            'pemesanan/order_success.html',
+            result=result,
+            montir=montir,
+            kendaraan=kendaraan,
+            message=message,
+            bengkel=bengkel
+        )
+
+    return "Terjadi kesalahan dalam pemrosesan pesanan."
 
 
 @blueprint.route('/register-kendaraan', methods=['GET', 'POST'])
@@ -93,3 +99,4 @@ def register_kendaraan():
         return redirect(url_for('authentication_blueprint.route_default'))
     
     return render_template('accounts/register_kendaraan.html', form=form)  # Kirim form ke template
+

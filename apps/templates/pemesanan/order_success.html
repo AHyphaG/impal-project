@@ -1,0 +1,29 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Pesan Jasa - Montir Keliling {% endblock %} 
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+    {% block content %}
+    <section class="min-vh-100 d-flex flex-column justify-content-center section-image overlay-soft-dark" data-background="/static/assets/img/pages/form-image.jpg">
+      <div class="container mx-sm-2 rounded" style="background-color: white;">
+          <h1>Pesanan Anda Telah Berhasil!</h1>
+
+          <div class="order-details">
+              <p><span>Nama Montir:</span> {{ montir.nama }}</p>
+              <p><span>Nama Bengkel:</span> {{ bengkel.namaBengkel }}</p>
+              <p><span>Kendaraan:</span> {{ kendaraan.tipe }} (Plat Nomor: {{ kendaraan.plat_nomor }})</p>
+              <p><span>Keluhan:</span> {{ kendaraan.keluhan }}</p>
+          </div>
+
+          <div class="map-container">
+              <h3>Lokasi Montir</h3>
+              <!-- Google Maps iframe -->
+          </div>
+      </div>
+    </section>
+
+{% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %}
+
