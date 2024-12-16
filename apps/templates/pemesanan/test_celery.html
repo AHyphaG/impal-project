@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Test Celery {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Test Celery Task</h1>
+    <p>Task ID: {{ task_id }}</p>
+    <p>Cek hasil: <a href="{{ url_for('pemesanan_blueprint.test_result', task_id=task_id) }}">di sini</a></p>
+</div>
+{% endblock %}

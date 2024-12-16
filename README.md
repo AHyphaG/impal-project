@@ -102,7 +102,7 @@ At this point, the app runs at `http://127.0.0.1:5000/`.
 > Start the celery
 
 ```bash
-$ celery -A celery_worker.celery worker --loglevel=info
+$ celery -A make_celery.celery_app worker --loglevel=info
 ```
 
 <br />

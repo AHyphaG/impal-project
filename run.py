@@ -30,7 +30,7 @@ except KeyError:
 # app = create_app(app_config)
 app = create_app(app_config)
 Migrate(app, db)
-
+celery_app = app.extensions["celery"]
 if not DEBUG:
     Minify(app=app, html=True, js=False, cssless=False)
     

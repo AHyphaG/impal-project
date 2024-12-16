@@ -94,17 +94,29 @@
 
 {% block javascripts %}
 <script>
-    setInterval(() => {
-    fetch(`/order_status/${task_id}`)
+    const taskId = "{{ task_id }}";
+
+    function checkOrderStatus() {
+        fetch(`/pemesanan/check-order-status/${taskId}`)
         .then(response => response.json())
         .then(data => {
             if (data.state === 'SUCCESS') {
-                // Update UI or navigate to success page
-                window.location.href = "/order_success";
+                window.location.href = `/pemesanan/order-status/${taskId}`;
             } else if (data.state === 'FAILURE') {
                 alert("Pesanan gagal dibuat. Silakan coba lagi.");
+                window.location.href = "/pemesanan/order-montir";
+            } else {
+                // Still pending, continue polling
+                setTimeout(checkOrderStatus, 2000);
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            setTimeout(checkOrderStatus, 2000);
         });
-}, 2000);
+    }
+
+    // Start polling when page loads
+    checkOrderStatus();
 </script>
 {% endblock javascripts %}

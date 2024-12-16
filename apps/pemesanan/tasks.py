@@ -17,32 +17,36 @@ def create_order_task(user_id, selected_vehicle_id, keluhan, alamat_id):
     timeout = 60
 
     while True:
-        print("TEST")
+        db.session.remove()
+        db.session.begin()
+
         selected_vehicle = Vehicles.query.filter_by(vehicleID=selected_vehicle_id).first()
 
         if not selected_vehicle:
             return "Kendaraan tidak ditemukan."
 
-        available_montirs = Montir.query.filter_by(is_available=True).all()
-
-        # Ambil alamat aktif user
+        
         user_alamat = Alamat.query.filter_by(alamatID=alamat_id).first()
 
         if not user_alamat:
             return "Alamat aktif tidak ditemukan."
 
+        available_montirs = Montir.query.filter_by(is_available=True).all()
+        print(f"Jumlah montir available: {len(available_montirs)}")
         suitable_montirs = []
+
         for montir in available_montirs:
             montir_cek = Users.query.filter_by(id=montir.user_id_fk).first()
             alamat_search = Alamat.query.filter_by(alamatID=montir_cek.alamat_active).first()
+            
             if alamat_search.kabkot == user_alamat.kabkot:
                 suitable_montirs.append(montir)
                 print("masuk montir")
+
         if suitable_montirs:
-            # Ambil montir pertama yang tersedia
             selected_montir = suitable_montirs[0]
             selected_bengkel = Bengkel.query.filter_by(bengkelId=selected_montir.bengkelIdFK).first()
-            # Buat pesanan baru
+            
             new_order = Orders(
                 orderDate=datetime.now(),
                 userIdFK=user_id,
@@ -81,8 +85,7 @@ def create_order_task(user_id, selected_vehicle_id, keluhan, alamat_id):
         if time.time() - start_time > timeout:
             return {
                 "message": "Tidak ada montir yang tersedia di kecamatan Anda.",
-                "montir": None
+                "montirDapat": None
             }
         
         sleep(5)
-
