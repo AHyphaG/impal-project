@@ -14,7 +14,7 @@ class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     password = db.Column(db.LargeBinary, nullable=False)
-    email = db.Column(db.String(64), unique=True, nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
     alamat_active = db.Column(db.Integer, db.ForeignKey('alamat.alamatID'), nullable=True)
     nomorHp = db.Column(db.String(64), nullable=False)
     role = db.Column(db.String(10),nullable = False)

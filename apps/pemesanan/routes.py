@@ -104,7 +104,7 @@ def register_kendaraan():
         db.session.commit()
         
         flash("Kendaraan berhasil didaftarkan.")
-        return redirect(url_for('authentication_blueprint.route_default'))
+        return redirect(url_for('home_blueprint.customer_index'))
     
     return render_template('accounts/register_kendaraan.html', form=form)  # Kirim form ke template
 

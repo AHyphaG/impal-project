@@ -53,7 +53,9 @@ def create_order_task(user_id, selected_vehicle_id, keluhan, alamat_id):
                 montirIdFK=selected_montir.montirId,
                 kendaraan=selected_vehicle.vehicleID,
                 keluhan=keluhan,
-                lokasi=user_alamat.alamat_lengkap
+                lokasi=user_alamat.alamat_lengkap,
+                status = "process",
+                task_id = create_order_task.request.id
             )
             db.session.add(new_order)
             db.session.commit()

@@ -12,6 +12,8 @@ class Orders(db.Model):
     montirIdFK = db.Column(db.Integer, db.ForeignKey('montir.montirId'), nullable=False)
     kendaraan = db.Column(db.Integer)
     keluhan = db.Column(db.String(50))
+    status = db.Column(db.String(50))
+    task_id = db.Column(db.String(50))
 
     product_details = db.relationship('ProductDetails', backref='order', lazy=True)
 

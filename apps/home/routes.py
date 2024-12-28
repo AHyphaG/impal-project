@@ -11,7 +11,7 @@ from jinja2 import TemplateNotFound
 
 from apps.authentication.Alamat import Alamat
 from apps.authentication.Bengkel import Bengkel
-from apps.pemesanan.models import Product
+from apps.pemesanan.models import Product, Orders
 
 from apps.home.forms import ProfileForm, TambahAlamat
 from apps.authentication.Customer import Customer
@@ -30,8 +30,14 @@ def index():
 @login_required(role="Customer")
 def customer_index():
     customer = Customer.query.filter_by(user_id_fk=current_user.id)
-
-    return render_template('home/customer.html',customer=customer)
+    order = Orders.query.filter_by(userIdFK=current_user.id).order_by(Orders.orderDate).first()
+    if order is not None:
+        status = order.status
+        task_id = order.task_id
+    else:
+        status = None
+        task_id = None
+    return render_template('home/customer.html',customer=customer,status=status, task_id=task_id)
 
 @blueprint.route('/<template>')
 @login_required(role="ANY")
