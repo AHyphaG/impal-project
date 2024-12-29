@@ -1,0 +1,317 @@
+{% extends "bengkel/layouts/base.html" %}
+
+{% block title %} Tambah Produk {% endblock %}
+
+{% block content %}
+    <!-- Main Content start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            
+                            <!-- Tombol untuk Menambah Kategori -->
+                            <div class="card">
+                                <div class="card-header" onclick="toggleDropdown('kategoriDropdown')" class="clickable-header">
+                                    <h5>Tambah Kategori</h5>
+                                    <i class="fas fa-chevron-down arrow-icon"></i>
+                                </div>
+                                <div id="kategoriDropdown" class="card-body" style="display: none;">
+                                    <form method="POST" action="{{ url_for('bengkel_blueprint.daftar_produk') }}">
+                                        {{ category_form.hidden_tag() }}
+                                        <div class="form-group">
+                                            {{ category_form.namaCategory.label }}
+                                            {{ category_form.namaCategory(class="form-control") }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ category_form.deskripsi.label }}
+                                            {{ category_form.deskripsi(class="form-control") }}
+                                        </div>
+                                        <button type="submit" name="submit_category" class="btn btn-primary">
+                                            Tambah Kategori
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Tombol untuk Menambah Produk -->
+                            <div class="card">
+                                <div class="card-header" onclick="toggleDropdown('produkDropdown')" class="clickable-header">
+                                    <h5>Tambah Produk</h5>
+                                    <i class="fas fa-chevron-down arrow-icon"></i>
+                                </div>
+                                <div id="produkDropdown" class="card-body" style="display: none;">
+                                    <form method="POST" action="{{ url_for('bengkel_blueprint.daftar_produk') }}">
+                                        {{ product_form.hidden_tag() }}
+                                        <div class="form-group">
+                                            {{ product_form.namaProduct.label }}
+                                            {{ product_form.namaProduct(class="form-control") }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ product_form.hargaPerSatuan.label }}
+                                            {{ product_form.hargaPerSatuan(class="form-control") }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ product_form.stock.label }}
+                                            {{ product_form.stock(class="form-control") }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ product_form.category.label }}
+                                            {{ product_form.category(class="form-control") }}
+                                        </div>
+                                        <button type="submit" name="submit_product" class="btn btn-primary">
+                                            Tambah Produk
+                                        </button>
+                                </div>
+                            </div>
+
+                            <!-- [ Daftar Produk ] -->
+                            <div class="row">
+                                <div class="col-xl-8 col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Daftar Produk</h5>
+                                        </div>
+                                        <div class="card-block px-0 py-3">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nama Produk</th>
+                                                            <th>Harga</th>
+                                                            <th>Stok</th>
+                                                            <th>Kategori</th>
+                                                            <th>Aksi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for product in products %}
+                                                            <tr data-productId="{{ product.productId }}">
+                                                                <td class="product-data" data-field="namaProduct">{{ product.namaProduct }}</td>
+                                                                <td class="product-data" data-field="hargaPerSatuan">{{ product.hargaPerSatuan }}</td>
+                                                                <td class="product-data" data-field="stock">{{ product.stock }}</td>
+                                                                <td>
+                                                                    <span class="category-label">{{ product.category.namaCategory }}</span>
+                                                                    <select class="form-control category-select d-none">
+                                                                        {% for category_id, category_name in product_form.category.choices %}
+                                                                            <option value="{{ category_id }}" 
+                                                                                    {% if product.categoryIdFK == category_id %}selected{% endif %}>
+                                                                                {{ category_name }}
+                                                                            </option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <a href="#" class="label theme-bg2 text-white f-12 edit-btn">Edit</a>
+                                                                    <a href="#" class="label theme-bg2 text-white f-12 hapus-btn">Hapus</a>
+                                                                    <a href="#" class="label theme-bg2 text-white f-12 save-btn d-none">Simpan</a>
+                                                                    <a href="#" class="label theme-bg2 text-white f-12 cancel-btn d-none">Batal</a>
+                                                                    
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Content end -->
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+    function toggleDropdown(formId) {
+        var form = document.getElementById(formId);
+        var arrow = document.querySelector(`#${formId} ~ .card-header .arrow-icon`);
+        
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+            arrow.classList.remove('fa-chevron-down');
+            arrow.classList.add('fa-chevron-up');
+        } else {
+            form.style.display = "none";
+            arrow.classList.remove('fa-chevron-up');
+            arrow.classList.add('fa-chevron-down');
+        }
+    }
+
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const row = this.closest('tr');
+
+            // Ubah sel data menjadi editable
+            row.querySelectorAll('.product-data').forEach(cell => {
+                const value = cell.textContent.trim();
+                cell.innerHTML = `<input type="text" class="form-control" value="${value}" />`;
+            });
+
+            // Tampilkan dropdown kategori
+            row.querySelector('.category-label').classList.add('d-none');
+            row.querySelector('.category-select').classList.remove('d-none');
+
+            // Tampilkan tombol "Simpan" dan "Batal"
+            row.querySelector('.edit-btn').classList.add('d-none');
+            row.querySelector('.save-btn').classList.remove('d-none');
+            row.querySelector('.cancel-btn').classList.remove('d-none');
+        });
+    });
+
+    document.querySelectorAll('.save-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            console.log('Edit button clicked');
+            const row = this.closest('tr');
+            const productId = row.dataset.productid;
+            
+            // Ambil data yang diedit
+            const updatedData = {};
+            row.querySelectorAll('.product-data').forEach(cell => {
+                const field = cell.dataset.field;
+                const value = cell.querySelector('input').value.trim();
+                updatedData[field] = value;
+            });
+
+            // Ambil kategori
+            const categoryField = row.querySelector('.category-select');
+            updatedData['categoryId'] = categoryField.value;
+
+            // Kirim ke server
+            fetch('/update-product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}',
+                },
+                body: JSON.stringify({
+                    id: productId,
+                    ...updatedData,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Perbarui tampilan tabel
+                    row.querySelectorAll('.product-data').forEach(cell => {
+                        const field = cell.dataset.field;
+                        cell.textContent = updatedData[field];
+                    });
+
+                    const categoryLabel = row.querySelector('.category-label');
+                    const selectedOption = categoryField.options[categoryField.selectedIndex].text;
+                    categoryLabel.textContent = selectedOption;
+
+                    // Kembalikan tampilan awal
+                    row.querySelectorAll('.product-data input').forEach(input => {
+                        const parent = input.parentElement;
+                        parent.textContent = input.value;
+                    });
+
+                    categoryLabel.classList.remove('d-none');
+                    categoryField.classList.add('d-none');
+                    row.querySelector('.save-btn').classList.add('d-none');
+                    row.querySelector('.cancel-btn').classList.add('d-none');
+                    row.querySelector('.edit-btn').classList.remove('d-none');
+                } else {
+                    alert('Gagal memperbarui data: ' + data.message);
+                }
+            });
+        });
+    });
+
+    document.querySelectorAll('.cancel-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const row = this.closest('tr');
+
+            // Kembalikan tampilan awal
+            row.querySelectorAll('.product-data input').forEach(input => {
+                const parent = input.parentElement;
+                const originalValue = input.defaultValue;
+                parent.textContent = originalValue;
+            });
+
+            row.querySelector('.category-label').classList.remove('d-none');
+            row.querySelector('.category-select').classList.add('d-none');
+            row.querySelector('.save-btn').classList.add('d-none');
+            row.querySelector('.cancel-btn').classList.add('d-none');
+            row.querySelector('.edit-btn').classList.remove('d-none');
+        });
+    });
+
+    document.querySelectorAll('.hapus-btn').forEach(button => {
+        button.addEventListener('click', function () {
+
+            console.log('Delete button clicked');
+            const row = this.closest('tr');
+            const productId = row.dataset.productid;
+
+            if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+                
+                fetch('/delete-product', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({ id: productId }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        row.remove();
+                        alert('Produk berhasil dihapus!');
+                    } else {
+                        alert('Gagal menghapus produk!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menghapus produk.');
+                });
+            }
+        });
+    });
+
+    row.querySelectorAll('.product-data').forEach(cell => {
+        const field = cell.dataset.field;
+        cell.textContent = updatedData[field];
+    });
+
+
+</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+<style>
+    .clickable-header {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .clickable-header:hover {
+        background-color: #f4f4f4;
+    }
+
+    .arrow-icon {
+        transition: transform 0.3s ease;
+    }
+    .btn-small {
+        font-size: 1px;
+        padding: 2px 5px;
+        line-height: 1.2;
+    }
+
+</style>
+{% endblock stylesheets %}

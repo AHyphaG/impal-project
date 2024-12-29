@@ -22,8 +22,8 @@
                         <span class="pcoded-micon"><i class="feather icon-home"></i></span>
                         <span class="pcoded-mtext">Home</span></a>
                 </li>
-                <li data-username="Login Page" class="nav-item {% if 'ketentuan' in segment %} active {% endif %}">
-                    <a href="" class="nav-link">
+                <li data-username="Produk Page" class="nav-item {% if 'produk' in segment %} active {% endif %}">
+                    <a href="{{ url_for('bengkel_blueprint.daftar_produk') }}" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-list"></i></span>
                         <span class="pcoded-mtext">Produk</span></a>
                 </li>
@@ -31,11 +31,6 @@
                     <a href="{{ url_for('bengkel_blueprint.montir_page') }}" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-user-check"></i></span>
                         <span class="pcoded-mtext">Montir</span></a>
-                </li>
-                <li data-username="Pakta Page" class="nav-item {% if 'pakta' in segment %} active {% endif %}">
-                    <a href="" class="nav-link">
-                        <span class="pcoded-micon"><i class="feather icon-unlock"></i></span>
-                        <span class="pcoded-mtext">Pakta Integritas</span></a>
                 </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label></label>

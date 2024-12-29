@@ -19,7 +19,7 @@ class Orders(db.Model):
 
 class Product(db.Model):
     _tablename_ = 'product'
-    productId = db.Column(db.Integer, primary_key=True)
+    productId = db.Column(db.Integer, primary_key=True,nullable=False)
     namaProduct = db.Column(db.String(30), nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     hargaPerSatuan = db.Column(db.Integer, nullable=False)
@@ -31,6 +31,7 @@ class Category(db.Model):
     categoryId = db.Column(db.Integer, primary_key=True)
     namaCategory = db.Column(db.String(20), nullable=False)
     deskripsi = db.Column(db.String(150), nullable=True)
+    bengkel_id_fk = db.Column(db.Integer, db.ForeignKey('bengkel.bengkelId'), nullable=False)
 
     products = db.relationship('Product', backref='category', lazy=True)
 
