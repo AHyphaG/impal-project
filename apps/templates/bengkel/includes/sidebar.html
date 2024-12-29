@@ -87,6 +87,7 @@
                         <span class="pcoded-mtext">Notifikasi</span>
                     </a>
                 </li>
+                {% if montir.is_available or montir.status == "idle" %}
                 <li class="nav-item">
                     <div class="form-check form-switch" id="status-switch">
                         {%if montir.is_available%}
@@ -98,6 +99,14 @@
                         <label class="form-check-label" for="flexSwitchCheckDefault">Status Online</label>
                     </div>
                 </li>
+                {%else%}
+                <li data-username="Job Page" class="nav-item {% if 'pakta' in segment %} active {% endif %}">
+                    <a href="{{url_for('montir_blueprint.order_task')}}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-unlock"></i></span>
+                        <span class="pcoded-mtext">Job</span>
+                    </a>
+                </li>
+                {%endif%}
                 <li class="nav-item pcoded-menu-caption">
                     <label></label>
                 </li>

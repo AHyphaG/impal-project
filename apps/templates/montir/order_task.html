@@ -1,0 +1,23 @@
+{% extends "bengkel/layouts/base.html" %}
+
+{% block title %} Daftar Montir {% endblock %} 
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="order-details">
+        <h2>Order Details</h2>
+        <p>Order ID: {{ order.id }}</p>
+        <p>Order Date: {{ order.orderDate }}</p>
+        <p>Customer: {{ customer.namaDepan }} {{customer.namaBelakang}}</p>
+        <p>Nomor Telepon: {{ custAcc.nomorHp }}</p>
+        <p>Lokasi Kendaraan: {{ order.lokasi }}</p>
+        <p>Vehicle: {{ vehicle.tipe }}</p>
+        <p>Keluhan: {{ order.keluhan }}</p>
+        <p>Status: {{ order.status }}</p>
+    </div>
+    <!-- [ Main Content ] end --> 
+{% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %}

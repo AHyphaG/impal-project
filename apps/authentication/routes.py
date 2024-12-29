@@ -387,6 +387,7 @@ def register_montir_information():
             montir.tanggalLahir = form.tanggalLahir.data
             montir.tempatLahir = form.tempatLahir.data
             montir.is_available = False
+            montir.status = "idle"
             montir.user_id_fk=user.id
             db.session.add(montir)
             db.session.commit()

@@ -100,12 +100,16 @@ from apps import create_app, db
 os.environ.update({
     'DB_ENGINE': 'mysql+mysqldb',
     'DB_USERNAME': 'root',
-    'DB_PASS': 'admin',         # password yang benar
+    'DB_PASS': '',         # password yang benar
     'DB_HOST': 'localhost',
     'DB_PORT': '3306',
     'DB_NAME': 'mokel'
 })
-
+# # Print current environment
+print("Current environment variables:")
+for key in ['DB_ENGINE', 'DB_USERNAME', 'DB_PASS', 'DB_HOST', 'DB_PORT', 'DB_NAME']:
+    print(f"{key}: {os.environ.get(key)}")
+    
 DEBUG = False
 get_config_mode = 'Production'
 
@@ -119,7 +123,10 @@ flask_app = create_app(app_config)
 
 # Force MySQL configuration dengan credentials yang benar
 flask_app.config['SQLALCHEMY_DATABASE_URI'] = (
-    f"mysql+mysqldb://root:admin@localhost:3306/mokel"
+    # Kalau pake password yang di bawah
+    # f"mysql+mysqldb://root:admin@localhost:3306/mokel"
+    # Kalau tidak pake yang dibawah
+    f"mysql+mysqldb://root@localhost:3306/mokel"
 )
 flask_app.config['USE_SQLITE'] = False
 

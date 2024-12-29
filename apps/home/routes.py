@@ -30,13 +30,15 @@ def index():
 @login_required(role="Customer")
 def customer_index():
     customer = Customer.query.filter_by(user_id_fk=current_user.id)
-    order = Orders.query.filter_by(userIdFK=current_user.id).order_by(Orders.orderDate).first()
+    order = Orders.query.filter_by(userIdFK=current_user.id).order_by(Orders.orderDate.desc()).first()
     if order is not None:
         status = order.status
         task_id = order.task_id
     else:
         status = None
         task_id = None
+    
+    print("Status Customer: ",status)
     return render_template('home/customer.html',customer=customer,status=status, task_id=task_id)
 
 @blueprint.route('/<template>')

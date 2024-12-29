@@ -8,9 +8,12 @@ from apps.montir import blueprint
 from apps.authentication.Montir import Montir
 from apps.authentication.models import Users
 from apps.authentication.Bengkel import Bengkel
+from apps.authentication.Vehicles import Vehicles
 from apps.authentication.Alamat import Alamat
+from apps.authentication.Customer import Customer
 from apps.bengkel.Pending import Pending
 from apps.montir.forms import MontirProfile
+from apps.pemesanan.models import Orders
 
 from datetime import datetime
 
@@ -150,3 +153,15 @@ def profile_montir():
     form.alamat.data = alamat.alamat_lengkap
 
     return render_template("bengkel/layouts/profile.html", form=form,montir=montir,user=current_user)
+
+@blueprint.route('/order-task',methods=['GET'])
+@login_required("Montir")
+def order_task():
+    montir = Montir.query.filter_by(user_id_fk=current_user.id).first()
+    latest_order = Orders.query.filter_by(montirIdFK=montir.montirId).order_by(Orders.orderDate.desc()).first()
+    vehicle = Vehicles.query.filter_by(vehicleID=latest_order.kendaraan).first()
+    customer = Customer.query.filter_by(user_id_fk=latest_order.userIdFK).first()
+    akun_customer = Users.query.filter_by(id=customer.user_id_fk).first()
+    return render_template('montir/order_task.html',
+                    montir=montir,
+                    order=latest_order,vehicle=vehicle,customer=customer,custAcc=akun_customer)
