@@ -5,19 +5,166 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-    <!-- [ Main Content ] start -->
-    <div class="order-details">
-        <h2>Order Details</h2>
-        <p>Order ID: {{ order.id }}</p>
-        <p>Order Date: {{ order.orderDate }}</p>
-        <p>Customer: {{ customer.namaDepan }} {{customer.namaBelakang}}</p>
-        <p>Nomor Telepon: {{ custAcc.nomorHp }}</p>
-        <p>Lokasi Kendaraan: {{ order.lokasi }}</p>
-        <p>Vehicle: {{ vehicle.tipe }}</p>
-        <p>Keluhan: {{ order.keluhan }}</p>
-        <p>Status: {{ order.status }}</p>
-    </div>
-    <!-- [ Main Content ] end --> 
+
+        <!-- [ Main Content ] start -->
+        <div class="pcoded-main-container">
+            <div class="pcoded-wrapper">
+    
+                <div class="pcoded-content">
+                    <div class="pcoded-inner-content">
+                        <!-- [ breadcrumb ] start -->
+    
+                        <!-- [ breadcrumb ] end -->
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                <!-- [ Main Content ] start -->
+                                <div id = row1 class="row">
+                                    <div class="col-xl-8 col-md-6">
+                                        <div class="card Recent-Users">
+                                            <div class="card-header">
+                                                <h5>Tugas</h5>
+                                            </div>
+                                            <div class="card-block">
+                                                <div class="order-details">
+                                                    <h2>Order Details</h2>
+                                                    <div class="order-detail-item">
+                                                        <strong>Order ID:</strong> {{ order.id }}
+                                                    </div>
+                                                    <div class="order-detail-item">
+                                                        <strong>Order Date:</strong> {{ order.orderDate }}
+                                                    </div>
+                                                    <div class="order-detail-item">
+                                                        <strong>Customer:</strong> {{ customer.namaDepan }} {{ customer.namaBelakang }}
+                                                    </div>
+                                                    <div class="order-detail-item">
+                                                        <strong>Nomor Telepon:</strong> {{ custAcc.nomorHp }}
+                                                    </div>
+                                                    <div class="order-detail-item">
+                                                        <strong>Lokasi Kendaraan:</strong> {{ order.lokasi }}
+                                                    </div>
+                                                    <div class="order-detail-item">
+                                                        <strong>Vehicle:</strong> {{ vehicle.tipe }}
+                                                    </div>
+                                                    <div class="order-detail-item">
+                                                        <strong>Keluhan:</strong> {{ order.keluhan }}
+                                                    </div>
+                                                    <div class="order-detail-item">
+                                                        <strong>Status:</strong> {{ order.status }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-block">
+
+                                                <strong>Geser Ke Kanan Jika Sudah Sampai Lokasi</strong>
+                                                <div class="swipe-container"data-order-id="{{ order.orderID }}">
+                                                    <div id="swipeBtn" class="swipe-btn">
+                                                        <i class="feather icon-chevron-right"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- [ Main Content ] end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Main Content ] end -->    
+        <style>
+            .swipe-container {
+                width: 100%;
+                height: 60px;
+                background-color: #ddd;
+                border-radius: 30px;
+                position: relative;
+                overflow: hidden;
+            }
+        
+            .swipe-btn {
+                width: 100px;
+                height: 60px;
+                background-color: #28a745;
+                color: white;
+                text-align: center;
+                line-height: 60px;
+                border-radius: 30px;
+                position: absolute;
+                left: 0;
+                transition: background-color 0.3s;
+                user-select: none;
+                touch-action: pan-x;
+            }
+        
+            .swipe-btn.active {
+                background-color: #218838;
+            }
+        </style>
+        <script>
+            const swipeBtn = document.getElementById('swipeBtn');
+            const swipeContainer = document.querySelector('.swipe-container');
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+
+            // Fungsi untuk memulai drag
+            function startDrag(e) {
+                isDragging = true;
+                startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+                swipeBtn.classList.add('active');
+            }
+
+            // Fungsi untuk menggerakkan tombol
+            function moveDrag(e) {
+                if (!isDragging) return;
+
+                const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+                currentX = clientX - startX;
+
+                // Batas minimum dan maksimum
+                if (currentX < 0) currentX = 0;
+                if (currentX > swipeContainer.offsetWidth - swipeBtn.offsetWidth) {
+                    currentX = swipeContainer.offsetWidth - swipeBtn.offsetWidth;
+                }
+
+                swipeBtn.style.transform = `translateX(${currentX}px)`;
+            }
+
+            // Fungsi untuk mengakhiri drag
+            function endDrag() {
+                isDragging = false;
+
+                // Cek jika swipe selesai
+                if (currentX >= swipeContainer.offsetWidth - swipeBtn.offsetWidth) {
+                    const orderId = swipeContainer.getAttribute('data-order-id');
+                    if (orderId) {
+                        alert('Montir sudah sampai lokasi!');
+                        window.location.href = `/analisa-kendaraan/${orderId}`;
+                    } else {
+                        alert('Order ID tidak ditemukan!');
+                    }
+                }
+
+                // Reset posisi
+                swipeBtn.style.transform = 'translateX(0)';
+                swipeBtn.classList.remove('active');
+            }
+
+            // Event Listener untuk touch dan mouse
+            swipeBtn.addEventListener('touchstart', startDrag);
+            swipeBtn.addEventListener('touchmove', moveDrag);
+            swipeBtn.addEventListener('touchend', endDrag);
+
+            swipeBtn.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', moveDrag);
+            document.addEventListener('mouseup', endDrag);
+
+        </script>
 {% endblock content %}
 
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+
+
+{% endblock javascripts %}

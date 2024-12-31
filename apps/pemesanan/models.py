@@ -10,12 +10,19 @@ class Orders(db.Model):
     lokasi = db.Column(db.String(50), nullable=False)
     userIdFK = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     montirIdFK = db.Column(db.Integer, db.ForeignKey('montir.montirId'), nullable=False)
-    kendaraan = db.Column(db.Integer)
+    bengkel_id_fk = db.Column(db.Integer, db.ForeignKey('bengkel.bengkelId'))
+    customer_id_fk = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    kendaraan_id_fk = db.Column(db.Integer, db.ForeignKey('vehicles.vehicleID'))
     keluhan = db.Column(db.String(50))
     status = db.Column(db.String(50))
     task_id = db.Column(db.String(50))
 
-    product_details = db.relationship('ProductDetails', backref='order', lazy=True)
+    orderDetails = db.relationship('OrderDetails',backref='orders-orderDetail',lazy=True)
+    user = db.relationship('Users',backref='order-user',lazy=True)
+    customer = db.relationship('Customer',backref = 'customer', lazy=True)
+    montir = db.relationship('Montir',backref = 'orders', lazy=True)
+    bengkel = db.relationship('Bengkel',backref = 'orders', lazy =True)
+    vehicle = db.relationship('Vehicles',backref = 'orders-vehicle', lazy =True)
 
 class Product(db.Model):
     _tablename_ = 'product'
@@ -35,9 +42,14 @@ class Category(db.Model):
 
     products = db.relationship('Product', backref='category', lazy=True)
 
-class ProductDetails(db.Model):
-    _tablename_ = 'productdetails'
-    productDetailsId = db.Column(db.Integer, primary_key=True)
-    quantity = db.Column(db.Integer, nullable=True)
-    productIdFK = db.Column(db.Integer, db.ForeignKey('product.productId'), nullable=True)
-    ordersIdFK = db.Column(db.Integer, db.ForeignKey('orders.orderID'), nullable=False)
+class OrderDetails(db.Model):
+    _tablename_ = 'orderDetails'
+    id = db.Column(db.Integer, primary_key=True)
+    jenis = db.Column(db.String(10))
+    order_id_fk = db.Column(db.Integer, db.ForeignKey('orders.orderID'))
+    produk_id_fk = db.Column(db.Integer, db.ForeignKey('product.productId'))
+    deskripsi = db.Column(db.String(150))
+    hargaJenis = db.Column(db.Integer)
+    quantity = db.Column(db.Integer)
+    
+    produk = db.relationship('Product', backref = 'OrderDetails-Product', lazy = True)

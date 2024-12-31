@@ -6,6 +6,7 @@ from apps.authentication.models import Users
 from apps.authentication.Montir import Montir
 from apps.authentication.Alamat import Alamat
 from apps.authentication.Bengkel import Bengkel
+from apps.authentication.Customer import Customer
 from celery import shared_task
 from time import sleep
 import time
@@ -19,6 +20,8 @@ def create_order_task(user_id, selected_vehicle_id, keluhan, alamat_id):
     while True:
         db.session.remove()
         db.session.begin()
+        
+        customer=Customer.query.filter_by(user_id_fk=user_id).first()
 
         selected_vehicle = Vehicles.query.filter_by(vehicleID=selected_vehicle_id).first()
 
@@ -51,11 +54,13 @@ def create_order_task(user_id, selected_vehicle_id, keluhan, alamat_id):
                 orderDate=datetime.now(),
                 userIdFK=user_id,
                 montirIdFK=selected_montir.montirId,
-                kendaraan=selected_vehicle.vehicleID,
+                kendaraan_id_fk=selected_vehicle.vehicleID,
                 keluhan=keluhan,
                 lokasi=user_alamat.alamat_lengkap,
                 status = "process",
-                task_id = create_order_task.request.id
+                task_id = create_order_task.request.id,
+                bengkel_id_fk = selected_montir.bengkelIdFK,
+                customer_id_fk = customer.id
             )
             db.session.add(new_order)
             db.session.commit()

@@ -10,7 +10,7 @@ from apps.authentication.Montir import Montir
 from apps.authentication.Bengkel import Bengkel
 from apps.bengkel.Pending import Pending
 from apps.bengkel.forms import TambahMontirForm, KategoriForm, ProductForm
-from apps.pemesanan.models import Category, Product
+from apps.pemesanan.models import Category, Product, Orders
 def format_to_idr(value):
     return f"Rp {value:,.0f}".replace(",", ".")
 
@@ -197,4 +197,14 @@ def delete_product():
         db.session.commit()
         return jsonify({"success": True})
     return jsonify({"success": False, "message": "Produk tidak ditemukan!"}), 404
+
+@blueprint.route('/transaksi',methods = ['GET'])
+@login_required(role="Bengkel")
+def transaksi():
+    bengkel = Bengkel.query.filter_by(user_id_fk=current_user.id).first()
+    orders = Orders.query.filter_by(bengkel_id_fk=bengkel.bengkelId).all()
+    return render_template('bengkel/daftar_transaksi.html',
+                           segment = "transaksi",
+                           orders = orders,
+                           bengkel=bengkel)
 

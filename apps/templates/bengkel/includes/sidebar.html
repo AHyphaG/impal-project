@@ -22,6 +22,25 @@
                         <span class="pcoded-micon"><i class="feather icon-home"></i></span>
                         <span class="pcoded-mtext">Home</span></a>
                 </li>
+                <li data-username="Transaksi Page" class="nav-item {% if 'transaksi' in segment %} active {% endif %}">
+                    <a href="{{url_for('bengkel_blueprint.transaksi')}}" class="nav-link">
+                        <span class="pcoded-micon">
+                            <svg xmlns="http://www.w3.org/2000/svg" 
+                                width="24" 
+                                height="24" 
+                                viewBox="0 0 24 24" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                stroke-width="2" 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                class="feather feather-dollar-sign">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </span>
+                        <span class="pcoded-mtext">Transaksi</span></a>
+                </li>
                 <li data-username="Produk Page" class="nav-item {% if 'produk' in segment %} active {% endif %}">
                     <a href="{{ url_for('bengkel_blueprint.daftar_produk') }}" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-list"></i></span>

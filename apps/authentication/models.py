@@ -22,7 +22,6 @@ class Users(db.Model, UserMixin):
     # Relasi
     alamat = db.relationship('Alamat', backref='owner', foreign_keys='Alamat.user_id')
     vehicles = db.relationship('Vehicles', backref='owner', lazy=True)
-    customer = db.relationship('Customer', backref = 'owner')
     bengkel = db.relationship('Bengkel', backref = 'owner')
 
     def __init__(self, **kwargs):

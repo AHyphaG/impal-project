@@ -8,4 +8,4 @@ class Customer(db.Model):
     sex = db.Column(db.String(6))
     user_id_fk = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-
+    user = db.relationship('Users', backref = 'owner', lazy = True)

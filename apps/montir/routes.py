@@ -159,9 +159,17 @@ def profile_montir():
 def order_task():
     montir = Montir.query.filter_by(user_id_fk=current_user.id).first()
     latest_order = Orders.query.filter_by(montirIdFK=montir.montirId).order_by(Orders.orderDate.desc()).first()
-    vehicle = Vehicles.query.filter_by(vehicleID=latest_order.kendaraan).first()
+    vehicle = Vehicles.query.filter_by(vehicleID=latest_order.kendaraan_id_fk).first()
     customer = Customer.query.filter_by(user_id_fk=latest_order.userIdFK).first()
     akun_customer = Users.query.filter_by(id=customer.user_id_fk).first()
     return render_template('montir/order_task.html',
                     montir=montir,
                     order=latest_order,vehicle=vehicle,customer=customer,custAcc=akun_customer)
+    
+@blueprint.route('/analisa-kendaraan/<int:order_id>')
+@login_required("Montir")
+def analisa_kendaraan(order_id):
+    order = Orders.query.get(order_id)
+    if not order:
+        return "Order not found", 404
+    return render_template('montir/analisa_kendaraan.html', order=order)
