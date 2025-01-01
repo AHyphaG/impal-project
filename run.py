@@ -42,6 +42,14 @@ if DEBUG:
 
 csrf = CSRFProtect(app)
 
+@app.template_filter('currency')
+def format_currency(value):
+    """Format angka menjadi IDR"""
+    try:
+        return "Rp{:,.0f}".format(float(value)).replace(',', '.')
+    except ValueError:
+        return value
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5005")
 # test farrel

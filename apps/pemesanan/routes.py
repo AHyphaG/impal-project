@@ -1,11 +1,14 @@
-from flask import render_template, request,redirect, url_for,flash,jsonify
+from flask import render_template, request,redirect, url_for,flash,jsonify, send_file
 from flask_login import login_required, current_user
+import qrcode
+import io
 
 from apps import db
 from apps.pemesanan import blueprint
 from apps.pemesanan.tasks import create_order_task
 from apps.authentication.Vehicles import Vehicles
 from apps.authentication.Alamat import Alamat
+from apps.pemesanan.models import Orders
 from time import sleep
 
 from apps.pemesanan.forms import RegisterKendaraanForm, PesanJasaForm
@@ -107,4 +110,49 @@ def register_kendaraan():
         return redirect(url_for('home_blueprint.customer_index'))
     
     return render_template('accounts/register_kendaraan.html', form=form)  # Kirim form ke template
+
+@blueprint.route('/pembayaran')
+@login_required(role="Montir")
+def proses_pembayaran():
+    order_id = request.args.get('order_id')
+    order = Orders.query.get(order_id)
+    print("Order-nya: ",order, "Order ID: ",order_id)
+    return render_template('pemesanan/pembayaran.html', order=order)
+
+
+@blueprint.route('/generate-qrcode')
+@login_required(role="Montir")
+def generate_qrcode():
+    try:
+        total_harga = request.args.get('total_harga', 0)
+        # Format data untuk QR code
+        qr_data = f"ID Pembayaran: 12345\nTotal: Rp{total_harga}"
+        
+        # Buat QR code dengan pengaturan yang lebih spesifik
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+
+        # Buat gambar QR
+        qr_image = qr.make_image(fill_color="black", back_color="white")
+        
+        # Simpan ke buffer
+        buffer = io.BytesIO()
+        qr_image.save(buffer, format='PNG')
+        buffer.seek(0)
+        
+        return send_file(
+            buffer,
+            mimetype='image/png',
+            as_attachment=False,
+            download_name='qrcode.png'
+        )
+    except Exception as e:
+        print(f"Error generating QR code: {str(e)}")
+        return "Error generating QR code", 500
 

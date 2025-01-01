@@ -1,0 +1,29 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Total Pembayaran: {{ order.totalHarga | currency }}</h5>
+        <div class="mb-3">
+            <button id="tunaiButton" class="btn btn-primary">Pembayaran Tunai</button>
+            <button id="qrcodeButton" class="btn btn-success">Pembayaran Virtual (QR Code)</button>
+        </div>
+        <div id="qrcodeSection" style="display: none;">
+            <h6>Scan QR Code di bawah untuk pembayaran:</h6>
+            <div id="qrcode-container">
+                <img id="qrcode-img" src="{{ url_for('pemesanan_blueprint.generate_qrcode', total_harga=order.totalHarga) }}"
+                     alt="QR Code" style="max-width: 300px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const qrcodeButton = document.getElementById('qrcodeButton');
+    const qrcodeSection = document.getElementById('qrcodeSection');
+    const qrcodeImg = document.getElementById('qrcode-img');
+
+    qrcodeButton.addEventListener('click', function() {
+        qrcodeSection.style.display = 'block';
+        qrcodeImg.src = "{{ url_for('pemesanan_blueprint.generate_qrcode', total_harga=order.totalHarga) }}?" + new Date().getTime();
+    });
+});
+</script>

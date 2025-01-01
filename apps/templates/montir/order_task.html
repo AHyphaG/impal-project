@@ -135,18 +135,39 @@
             // Fungsi untuk mengakhiri drag
             function endDrag() {
                 isDragging = false;
-
+            
                 // Cek jika swipe selesai
                 if (currentX >= swipeContainer.offsetWidth - swipeBtn.offsetWidth) {
                     const orderId = swipeContainer.getAttribute('data-order-id');
                     if (orderId) {
                         alert('Montir sudah sampai lokasi!');
-                        window.location.href = `/analisa-kendaraan/${orderId}`;
+            
+                        // Kirim permintaan POST/PUT ke server untuk memperbarui status montir
+                        fetch(`/update-status/${orderId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token() }}',
+                            },
+                            body: JSON.stringify({ status: "Tiba" }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = `/analisa-kendaraan/${orderId}`;
+                            } else {
+                                alert('Gagal memperbarui status montir.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Terjadi kesalahan. Coba lagi nanti.');
+                        });
                     } else {
                         alert('Order ID tidak ditemukan!');
                     }
                 }
-
+            
                 // Reset posisi
                 swipeBtn.style.transform = 'translateX(0)';
                 swipeBtn.classList.remove('active');

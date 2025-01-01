@@ -16,8 +16,9 @@ class Orders(db.Model):
     keluhan = db.Column(db.String(50))
     status = db.Column(db.String(50))
     task_id = db.Column(db.String(50))
+    totalHarga = db.Column(db.Integer, nullable=True)
 
-    orderDetails = db.relationship('OrderDetails',backref='orders-orderDetail',lazy=True)
+    orderDetails = db.relationship('OrdersDetail',backref='orders-orderDetail',lazy=True)
     user = db.relationship('Users',backref='order-user',lazy=True)
     customer = db.relationship('Customer',backref = 'customer', lazy=True)
     montir = db.relationship('Montir',backref = 'orders', lazy=True)
@@ -42,14 +43,17 @@ class Category(db.Model):
 
     products = db.relationship('Product', backref='category', lazy=True)
 
-class OrderDetails(db.Model):
-    _tablename_ = 'orderDetails'
-    id = db.Column(db.Integer, primary_key=True)
-    jenis = db.Column(db.String(10))
-    order_id_fk = db.Column(db.Integer, db.ForeignKey('orders.orderID'))
-    produk_id_fk = db.Column(db.Integer, db.ForeignKey('product.productId'))
-    deskripsi = db.Column(db.String(150))
-    hargaJenis = db.Column(db.Integer)
-    quantity = db.Column(db.Integer)
+class OrdersDetail(db.Model):
+    __tablename__ = 'ordersDetail'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    order_id_fk = db.Column(db.Integer, db.ForeignKey('orders.orderID'), nullable=False)
+    isJasa = db.Column(db.Boolean, nullable=False)
+    jasa = db.Column(db.String(150), nullable=True)
+    analisa = db.Column(db.String(150), nullable=False)
+    solusi = db.Column(db.String(150), nullable=False)
+    produk_id_fk = db.Column(db.Integer, db.ForeignKey('product.productId'), nullable=True)
+    quantity = db.Column(db.Integer, nullable=True)
+    totalHarga = db.Column(db.Integer, nullable=False)
     
     produk = db.relationship('Product', backref = 'OrderDetails-Product', lazy = True)

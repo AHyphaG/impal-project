@@ -29,7 +29,14 @@ from apps.authentication.util import *
 
 @blueprint.route('/')
 def route_default():
-    # return redirect(url_for('authentication_blueprint.login'))
+    if current_user.is_authenticated:
+        if current_user.role == "Customer":
+            return redirect(url_for('customer_blueprint.customer_index'))
+        elif current_user.role == "Montir":
+            return redirect(url_for('montir_blueprint.beranda_montir'))
+        elif current_user.role == "Bengkel":
+            return redirect(url_for('bengkel_blueprint.dashboard'))
+    
     return redirect(url_for('authentication_blueprint.index'))
 
 @blueprint.route('/index')

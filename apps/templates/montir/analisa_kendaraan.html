@@ -1,1 +1,157 @@
-<h3>Hello</h3>
+{% extends "bengkel/layouts/base.html" %}
+
+{% block title %} Analisa Kendaraan {% endblock %} 
+
+{% block stylesheets %}
+<style>
+    .dynamic-section {
+        margin-top: 20px;
+    }
+
+    .dynamic-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .dynamic-item input, .dynamic-item select {
+        margin-right: 10px;
+    }
+
+    .remove-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .add-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Analisa Kendaraan</h5>
+                            </div>
+                            <div class="card-block">
+                                <form id="analysisForm" method="POST" action="/submit-analisa">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="order_id" value="{{ order.orderID }}">
+                                    <!-- Analisa montir -->
+                                    <div class="form-group">
+                                        <label for="analysis">Analisa:</label>
+                                        <textarea id="analysis" name = "analysis" class="form-control" rows="3" required></textarea>
+                                    </div>
+
+                                    <!-- Solusi -->
+                                    <div class="form-group">
+                                        <label for="solution">Solusi:</label>
+                                        <textarea id="solution" name= "solution" class="form-control" rows="3" required></textarea>
+                                    </div>
+
+                                    <!-- Jasa Section -->
+                                    <div class="dynamic-section" id="serviceSection">
+                                        <h6>Jasa</h6>
+                                        <div class="dynamic-item card-block">
+                                            <input type="text" class="form-control" name="service[]" placeholder="Nama Jasa" required />
+                                            <input type="number" class="form-control" name="servicePrice[]" placeholder="Harga Jasa" required />
+                                            <button type="button" class="remove-btn">Hapus</button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="add-btn" id="addService">+ Jasa</button>
+
+                                    <!-- Produk Section -->
+                                    <div class="dynamic-section card-block" id="productSection">
+                                        <h6>Produk</h6>
+                                        <div class="dynamic-item">
+                                            <select class="form-control" name="product[]" required>
+                                                <option value="">Pilih Produk</option>
+                                                {% for product in products %}
+                                                <option value="{{ product.productId }}">{{ product.namaProduct }} - {{ product.hargaPerSatuan|currency }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <input type="number" class="form-control" name="productQty[]" placeholder="Jumlah" required />
+                                            <button type="button" class="remove-btn">Hapus</button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="add-btn" id="addProduct">+ Produk</button>
+
+                                    <!-- Submit Button -->
+                                    <div class="form-group mt-3">
+                                        <button type="submit" class="btn btn-primary">Simpan Analisa</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Add dynamic service
+        const serviceSection = document.getElementById('serviceSection');
+        document.getElementById('addService').addEventListener('click', () => {
+            const item = document.createElement('div');
+            item.className = 'dynamic-item card-block';
+            item.innerHTML = `
+                <input type="text" class="form-control" name="service[]" placeholder="Nama Jasa" required />
+                <input type="number" class="form-control" name="servicePrice[]" placeholder="Harga Jasa" required />
+                <button type="button" class="remove-btn">Hapus</button>
+            `;
+            serviceSection.appendChild(item);
+            setupRemoveButtons();
+        });
+
+        // Add dynamic product
+        const productSection = document.getElementById('productSection');
+        document.getElementById('addProduct').addEventListener('click', () => {
+            const item = document.createElement('div');
+            item.className = 'dynamic-item card-block';
+            item.innerHTML = `
+                <select class="form-control" name="product[]" required>
+                    {% for product in products %}
+                    <option value="{{ product.productId }}">{{ product.name }} - {{ product.price }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" class="form-control" name="productQty[]" placeholder="Jumlah" required />
+                <button type="button" class="remove-btn">Hapus</button>
+            `;
+            productSection.appendChild(item);
+            setupRemoveButtons();
+        });
+
+        // Remove dynamic items
+        function setupRemoveButtons() {
+            document.querySelectorAll('.remove-btn').forEach((btn) => {
+                btn.addEventListener('click', (e) => {
+                    e.target.parentElement.remove();
+                });
+            });
+        }
+        setupRemoveButtons();
+    });
+</script>
+{% endblock javascripts %}
